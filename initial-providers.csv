@@ -1,0 +1,102 @@
+name,type,phone,specialty,address,city,wilaya,latitude,longitude,accessibility,homevisits,available24_7,rating
+Clinique El Amel,clinic,+213 48 54 12 34,General Medicine,Rue de la République,Sidi Bel Abbès,Sidi Bel Abbès,35.1908,0.6388,true,false,false,4.5
+Hôpital Dahmani,hospital,+213 48 54 23 45,Emergency,Boulevard de la Liberté,Sidi Bel Abbès,Sidi Bel Abbès,35.1925,0.6402,true,false,true,4.8
+Dr. Benali Mohammed,doctor,+213 48 54 34 56,Cardiology,Avenue Pasteur,Sidi Bel Abbès,Sidi Bel Abbès,35.1890,0.6375,false,true,false,4.3
+Pharmacie Centrale,pharmacy,+213 48 54 45 67,Pharmacy,Place de la Mairie,Sidi Bel Abbès,Sidi Bel Abbès,35.1912,0.6395,true,false,true,4.6
+Laboratoire Ibn Sina,lab,+213 48 54 56 78,Laboratory,Rue des Frères Boukhors,Sidi Bel Abbès,Sidi Bel Abbès,35.1898,0.6380,true,false,false,4.4
+Clinique Essalem,clinic,+213 48 54 67 89,Pediatrics,Avenue de l'ALN,Sidi Bel Abbès,Sidi Bel Abbès,35.1935,0.6410,true,true,false,4.7
+Dr. Khelifi Fatima,doctor,+213 48 54 78 90,Dermatology,Rue Larbi Ben M'hidi,Sidi Bel Abbès,Sidi Bel Abbès,35.1880,0.6365,false,true,false,4.2
+Hôpital Militaire,hospital,+213 48 54 89 01,Surgery,Route de Mascara,Sidi Bel Abbès,Sidi Bel Abbès,35.1950,0.6425,true,false,true,4.9
+Pharmacie du Parc,pharmacy,+213 48 54 90 12,Pharmacy,Boulevard Benzerdjeb,Sidi Bel Abbès,Sidi Bel Abbès,35.1905,0.6390,true,false,false,4.5
+Clinique Dentaire Sourire,clinic,+213 48 54 01 23,Dentistry,Rue Emir Abdelkader,Sidi Bel Abbès,Sidi Bel Abbès,35.1920,0.6400,true,false,false,4.6
+Dr. Hamidi Karim,doctor,+213 48 54 12 35,Orthopedics,Avenue de la Victoire,Sidi Bel Abbès,Sidi Bel Abbès,35.1895,0.6385,false,true,false,4.4
+Laboratoire Pasteur,lab,+213 48 54 23 46,Laboratory,Rue du 1er Novembre,Sidi Bel Abbès,Sidi Bel Abbès,35.1915,0.6398,true,false,false,4.7
+Clinique El Baraka,clinic,+213 48 54 34 57,General Medicine,Boulevard Zabana,Sidi Bel Abbès,Sidi Bel Abbès,35.1940,0.6415,true,false,false,4.3
+Dr. Meziane Amina,doctor,+213 48 54 45 68,Gynecology,Rue des Martyrs,Sidi Bel Abbès,Sidi Bel Abbès,35.1885,0.6370,true,true,false,4.8
+Pharmacie Nouvelle,pharmacy,+213 48 54 56 79,Pharmacy,Avenue Boumediene,Sidi Bel Abbès,Sidi Bel Abbès,35.1910,0.6393,true,false,true,4.5
+Hôpital Pédiatrique,hospital,+213 48 54 67 90,Pediatrics,Rue de la Paix,Sidi Bel Abbès,Sidi Bel Abbès,35.1930,0.6408,true,false,false,4.7
+Dr. Bouziane Rachid,doctor,+213 48 54 78 01,Neurology,Boulevard de l'Indépendance,Sidi Bel Abbès,Sidi Bel Abbès,35.1900,0.6388,false,false,false,4.2
+Clinique Ophtalmologique,clinic,+213 48 54 89 12,Ophthalmology,Rue Didouche Mourad,Sidi Bel Abbès,Sidi Bel Abbès,35.1918,0.6396,true,false,false,4.6
+Laboratoire Moderne,lab,+213 48 54 90 23,Laboratory,Avenue Khemisti,Sidi Bel Abbès,Sidi Bel Abbès,35.1892,0.6378,true,false,false,4.4
+Pharmacie de la Gare,pharmacy,+213 48 54 01 34,Pharmacy,Place de la Gare,Sidi Bel Abbès,Sidi Bel Abbès,35.1922,0.6403,true,false,false,4.5
+Dr. Taleb Nadia,doctor,+213 48 54 12 36,Psychiatry,Rue Ben Badis,Sidi Bel Abbès,Sidi Bel Abbès,35.1888,0.6373,false,true,false,4.3
+Clinique Chirurgicale,clinic,+213 48 54 23 47,Surgery,Boulevard Tripoli,Sidi Bel Abbès,Sidi Bel Abbès,35.1945,0.6420,true,false,false,4.8
+Hôpital Régional,hospital,+213 48 54 34 58,Emergency,Route de Telagh,Sidi Bel Abbès,Sidi Bel Abbès,35.1955,0.6430,true,false,true,4.9
+Dr. Cherif Youcef,doctor,+213 48 54 45 69,ENT,Avenue Soummam,Sidi Bel Abbès,Sidi Bel Abbès,35.1897,0.6383,false,true,false,4.4
+Pharmacie du Centre,pharmacy,+213 48 54 56 80,Pharmacy,Rue Larbi Tebessi,Sidi Bel Abbès,Sidi Bel Abbès,35.1913,0.6397,true,false,true,4.6
+Laboratoire Central,lab,+213 48 54 67 91,Laboratory,Boulevard Amirouche,Sidi Bel Abbès,Sidi Bel Abbès,35.1903,0.6391,true,false,false,4.5
+Clinique Mère-Enfant,clinic,+213 48 54 78 02,Pediatrics,Rue Hassiba Ben Bouali,Sidi Bel Abbès,Sidi Bel Abbès,35.1928,0.6406,true,true,false,4.7
+Dr. Boukhari Salim,doctor,+213 48 54 89 13,Urology,Avenue de la République,Sidi Bel Abbès,Sidi Bel Abbès,35.1893,0.6379,false,false,false,4.2
+Pharmacie Moderne,pharmacy,+213 48 54 90 24,Pharmacy,Rue Abane Ramdane,Sidi Bel Abbès,Sidi Bel Abbès,35.1917,0.6399,true,false,false,4.5
+Clinique Dentaire Moderne,clinic,+213 48 54 01 35,Dentistry,Boulevard Benzerdjeb,Sidi Bel Abbès,Sidi Bel Abbès,35.1907,0.6392,true,false,false,4.6
+Dr. Mansouri Leila,doctor,+213 48 54 12 37,Endocrinology,Rue Mohamed Khemisti,Sidi Bel Abbès,Sidi Bel Abbès,35.1890,0.6376,true,true,false,4.4
+Laboratoire Biologique,lab,+213 48 54 23 48,Laboratory,Avenue Boudiaf,Sidi Bel Abbès,Sidi Bel Abbès,35.1920,0.6401,true,false,false,4.7
+Hôpital de Jour,hospital,+213 48 54 34 59,General Medicine,Rue de la Liberté,Sidi Bel Abbès,Sidi Bel Abbès,35.1933,0.6411,true,false,false,4.3
+Dr. Ziani Ahmed,doctor,+213 48 54 45 70,Rheumatology,Boulevard de l'ALN,Sidi Bel Abbès,Sidi Bel Abbès,35.1896,0.6382,false,true,false,4.5
+Pharmacie de l'Espoir,pharmacy,+213 48 54 56 81,Pharmacy,Rue Krim Belkacem,Sidi Bel Abbès,Sidi Bel Abbès,35.1911,0.6394,true,false,true,4.6
+Clinique Cardiologique,clinic,+213 48 54 67 92,Cardiology,Avenue Zighout Youcef,Sidi Bel Abbès,Sidi Bel Abbès,35.1942,0.6417,true,false,false,4.8
+Dr. Belkacem Samira,doctor,+213 48 54 78 03,Allergology,Rue Si El Houès,Sidi Bel Abbès,Sidi Bel Abbès,35.1887,0.6372,false,true,false,4.3
+Laboratoire d'Analyses,lab,+213 48 54 89 14,Laboratory,Boulevard Benzerdjeb,Sidi Bel Abbès,Sidi Bel Abbès,35.1906,0.6389,true,false,false,4.5
+Pharmacie de la Santé,pharmacy,+213 48 54 90 25,Pharmacy,Rue Cheikh Bouamama,Sidi Bel Abbès,Sidi Bel Abbès,35.1919,0.6402,true,false,false,4.4
+Clinique Neurologique,clinic,+213 48 54 01 36,Neurology,Avenue de la Victoire,Sidi Bel Abbès,Sidi Bel Abbès,35.1938,0.6413,true,false,false,4.7
+Dr. Hadj Ali Kamel,doctor,+213 48 54 12 38,Gastroenterology,Rue Emir Abdelkader,Sidi Bel Abbès,Sidi Bel Abbès,35.1894,0.6381,false,true,false,4.4
+Hôpital Psychiatrique,hospital,+213 48 54 23 49,Psychiatry,Route de Oran,Sidi Bel Abbès,Sidi Bel Abbès,35.1960,0.6435,true,false,false,4.2
+Pharmacie du Soleil,pharmacy,+213 48 54 34 60,Pharmacy,Boulevard de la République,Sidi Bel Abbès,Sidi Bel Abbès,35.1914,0.6398,true,false,true,4.6
+Laboratoire Médical,lab,+213 48 54 45 71,Laboratory,Rue des Frères Boukhors,Sidi Bel Abbès,Sidi Bel Abbès,35.1899,0.6386,true,false,false,4.5
+Dr. Saidi Farida,doctor,+213 48 54 56 82,Hematology,Avenue Pasteur,Sidi Bel Abbès,Sidi Bel Abbès,35.1891,0.6377,true,true,false,4.6
+Clinique Radiologique,clinic,+213 48 54 67 93,Radiology,Rue Larbi Ben M'hidi,Sidi Bel Abbès,Sidi Bel Abbès,35.1926,0.6404,true,false,false,4.7
+Pharmacie de l'Avenir,pharmacy,+213 48 54 78 04,Pharmacy,Boulevard Zabana,Sidi Bel Abbès,Sidi Bel Abbès,35.1941,0.6416,true,false,false,4.5
+Dr. Benabdallah Omar,doctor,+213 48 54 89 15,Nephrology,Rue des Martyrs,Sidi Bel Abbès,Sidi Bel Abbès,35.1886,0.6371,false,false,false,4.3
+Clinique Esthétique,clinic,+213 48 54 90 26,Dermatology,Avenue Boumediene,Sidi Bel Abbès,Sidi Bel Abbès,35.1909,0.6393,true,false,false,4.4
+Laboratoire Clinique,lab,+213 48 54 01 37,Laboratory,Rue de la Paix,Sidi Bel Abbès,Sidi Bel Abbès,35.1931,0.6409,true,false,false,4.6
+Hôpital Universitaire,hospital,+213 48 54 12 39,General Medicine,Boulevard de l'Indépendance,Sidi Bel Abbès,Sidi Bel Abbès,35.1901,0.6387,true,false,true,4.9
+Pharmacie de la Paix,pharmacy,+213 48 54 23 50,Pharmacy,Rue Didouche Mourad,Sidi Bel Abbès,Sidi Bel Abbès,35.1916,0.6400,true,false,true,4.7
+Dr. Medjahdi Nassim,doctor,+213 48 54 34 61,Oncology,Avenue Khemisti,Sidi Bel Abbès,Sidi Bel Abbès,35.1892,0.6378,false,true,false,4.5
+Clinique Pédiatrique,clinic,+213 48 54 45 72,Pediatrics,Place de la Gare,Sidi Bel Abbès,Sidi Bel Abbès,35.1923,0.6405,true,true,false,4.8
+Laboratoire Spécialisé,lab,+213 48 54 56 83,Laboratory,Rue Ben Badis,Sidi Bel Abbès,Sidi Bel Abbès,35.1889,0.6374,true,false,false,4.4
+Dr. Bouazza Malika,doctor,+213 48 54 67 94,Pulmonology,Boulevard Tripoli,Sidi Bel Abbès,Sidi Bel Abbès,35.1946,0.6421,false,true,false,4.6
+Pharmacie Principale,pharmacy,+213 48 54 78 05,Pharmacy,Route de Telagh,Sidi Bel Abbès,Sidi Bel Abbès,35.1956,0.6431,true,false,false,4.5
+Clinique Orthopédique,clinic,+213 48 54 89 16,Orthopedics,Avenue Soummam,Sidi Bel Abbès,Sidi Bel Abbès,35.1898,0.6384,true,false,false,4.7
+Dr. Rahmani Sofiane,doctor,+213 48 54 90 27,Anesthesiology,Rue Larbi Tebessi,Sidi Bel Abbès,Sidi Bel Abbès,35.1912,0.6396,false,false,false,4.3
+Laboratoire Régional,lab,+213 48 54 01 38,Laboratory,Boulevard Amirouche,Sidi Bel Abbès,Sidi Bel Abbès,35.1904,0.6390,true,false,false,4.6
+Hôpital Mère-Enfant,hospital,+213 48 54 12 40,Pediatrics,Rue Hassiba Ben Bouali,Sidi Bel Abbès,Sidi Bel Abbès,35.1929,0.6407,true,false,false,4.8
+Pharmacie du Progrès,pharmacy,+213 48 54 23 51,Pharmacy,Avenue de la République,Sidi Bel Abbès,Sidi Bel Abbès,35.1894,0.6380,true,false,true,4.5
+Dr. Khaldi Yasmine,doctor,+213 48 54 34 62,Infectious Diseases,Rue Abane Ramdane,Sidi Bel Abbès,Sidi Bel Abbès,35.1918,0.6401,true,true,false,4.4
+Clinique Urologique,clinic,+213 48 54 45 73,Urology,Boulevard Benzerdjeb,Sidi Bel Abbès,Sidi Bel Abbès,35.1908,0.6392,true,false,false,4.6
+Laboratoire Avancé,lab,+213 48 54 56 84,Laboratory,Rue Mohamed Khemisti,Sidi Bel Abbès,Sidi Bel Abbès,35.1891,0.6377,true,false,false,4.5
+Dr. Benmoussa Tarek,doctor,+213 48 54 67 95,Vascular Surgery,Avenue Boudiaf,Sidi Bel Abbès,Sidi Bel Abbès,35.1921,0.6403,false,true,false,4.7
+Pharmacie de la Victoire,pharmacy,+213 48 54 78 06,Pharmacy,Rue de la Liberté,Sidi Bel Abbès,Sidi Bel Abbès,35.1934,0.6412,true,false,false,4.4
+Clinique Gastro-Entérologique,clinic,+213 48 54 89 17,Gastroenterology,Boulevard de l'ALN,Sidi Bel Abbès,Sidi Bel Abbès,35.1897,0.6383,true,false,false,4.8
+Dr. Ferhat Amina,doctor,+213 48 54 90 28,Pediatric Surgery,Rue Krim Belkacem,Sidi Bel Abbès,Sidi Bel Abbès,35.1910,0.6395,false,true,false,4.5
+Laboratoire Diagnostic,lab,+213 48 54 01 39,Laboratory,Avenue Zighout Youcef,Sidi Bel Abbès,Sidi Bel Abbès,35.1943,0.6418,true,false,false,4.6
+Hôpital Chirurgical,hospital,+213 48 54 12 41,Surgery,Rue Si El Houès,Sidi Bel Abbès,Sidi Bel Abbès,35.1888,0.6373,true,false,true,4.9
+Pharmacie de l'Unité,pharmacy,+213 48 54 23 52,Pharmacy,Boulevard Benzerdjeb,Sidi Bel Abbès,Sidi Bel Abbès,35.1907,0.6391,true,false,true,4.7
+Dr. Latrèche Karim,doctor,+213 48 54 34 63,Plastic Surgery,Rue Cheikh Bouamama,Sidi Bel Abbès,Sidi Bel Abbès,35.1920,0.6404,false,false,false,4.3
+Clinique Rhumatologique,clinic,+213 48 54 45 74,Rheumatology,Avenue de la Victoire,Sidi Bel Abbès,Sidi Bel Abbès,35.1939,0.6414,true,false,false,4.6
+Laboratoire Microbiologique,lab,+213 48 54 56 85,Laboratory,Rue Emir Abdelkader,Sidi Bel Abbès,Sidi Bel Abbès,35.1895,0.6382,true,false,false,4.5
+Dr. Ould Ali Fatima,doctor,+213 48 54 67 96,Geriatrics,Route de Oran,Sidi Bel Abbès,Sidi Bel Abbès,35.1961,0.6436,true,true,false,4.4
+Pharmacie de la Fraternité,pharmacy,+213 48 54 78 07,Pharmacy,Boulevard de la République,Sidi Bel Abbès,Sidi Bel Abbès,35.1915,0.6399,true,false,false,4.6
+Clinique Endocrinologique,clinic,+213 48 54 89 18,Endocrinology,Rue des Frères Boukhors,Sidi Bel Abbès,Sidi Bel Abbès,35.1900,0.6387,true,false,false,4.7
+Dr. Bencheikh Rachid,doctor,+213 48 54 90 29,Thoracic Surgery,Avenue Pasteur,Sidi Bel Abbès,Sidi Bel Abbès,35.1892,0.6379,false,true,false,4.5
+Laboratoire Immunologique,lab,+213 48 54 01 40,Laboratory,Rue Larbi Ben M'hidi,Sidi Bel Abbès,Sidi Bel Abbès,35.1927,0.6405,true,false,false,4.6
+Hôpital Ophtalmologique,hospital,+213 48 54 12 42,Ophthalmology,Boulevard Zabana,Sidi Bel Abbès,Sidi Bel Abbès,35.1942,0.6417,true,false,false,4.8
+Pharmacie de la Solidarité,pharmacy,+213 48 54 23 53,Pharmacy,Rue des Martyrs,Sidi Bel Abbès,Sidi Bel Abbès,35.1887,0.6372,true,false,true,4.5
+Dr. Djaballah Nabil,doctor,+213 48 54 34 64,Sports Medicine,Avenue Boumediene,Sidi Bel Abbès,Sidi Bel Abbès,35.1911,0.6394,false,true,false,4.4
+Clinique Néphrologique,clinic,+213 48 54 45 75,Nephrology,Rue de la Paix,Sidi Bel Abbès,Sidi Bel Abbès,35.1932,0.6410,true,false,false,4.7
+Laboratoire Génétique,lab,+213 48 54 56 86,Laboratory,Boulevard de l'Indépendance,Sidi Bel Abbès,Sidi Bel Abbès,35.1902,0.6388,true,false,false,4.6
+Dr. Mokrani Samia,doctor,+213 48 54 67 97,Nutrition,Rue Didouche Mourad,Sidi Bel Abbès,Sidi Bel Abbès,35.1917,0.6401,true,true,false,4.5
+Pharmacie de l'Amitié,pharmacy,+213 48 54 78 08,Pharmacy,Avenue Khemisti,Sidi Bel Abbès,Sidi Bel Abbès,35.1893,0.6379,true,false,false,4.4
+Clinique Hématologique,clinic,+213 48 54 89 19,Hematology,Place de la Gare,Sidi Bel Abbès,Sidi Bel Abbès,35.1924,0.6406,true,false,false,4.8
+Dr. Bensalem Youcef,doctor,+213 48 54 90 30,Pain Management,Rue Ben Badis,Sidi Bel Abbès,Sidi Bel Abbès,35.1890,0.6375,false,true,false,4.3
+Laboratoire Toxicologique,lab,+213 48 54 01 41,Laboratory,Boulevard Tripoli,Sidi Bel Abbès,Sidi Bel Abbès,35.1947,0.6422,true,false,false,4.5
+Hôpital Cardiologique,hospital,+213 48 54 12 43,Cardiology,Route de Telagh,Sidi Bel Abbès,Sidi Bel Abbès,35.1957,0.6432,true,false,true,4.9
+Pharmacie de la Concorde,pharmacy,+213 48 54 23 54,Pharmacy,Avenue Soummam,Sidi Bel Abbès,Sidi Bel Abbès,35.1899,0.6385,true,false,true,4.6
+Dr. Hamdani Leila,doctor,+213 48 54 34 65,Palliative Care,Rue Larbi Tebessi,Sidi Bel Abbès,Sidi Bel Abbès,35.1913,0.6397,true,true,false,4.7
+Clinique Allergologique,clinic,+213 48 54 45 76,Allergology,Boulevard Amirouche,Sidi Bel Abbès,Sidi Bel Abbès,35.1905,0.6391,true,false,false,4.4
+Laboratoire Sérologique,lab,+213 48 54 56 87,Laboratory,Rue Hassiba Ben Bouali,Sidi Bel Abbès,Sidi Bel Abbès,35.1930,0.6408,true,false,false,4.5
+Dr. Zeroual Ahmed,doctor,+213 48 54 67 98,Occupational Medicine,Avenue de la République,Sidi Bel Abbès,Sidi Bel Abbès,35.1895,0.6381,false,false,false,4.3
+Pharmacie de l'Espérance,pharmacy,+213 48 54 78 09,Pharmacy,Rue Abane Ramdane,Sidi Bel Abbès,Sidi Bel Abbès,35.1919,0.6402,true,false,false,4.6
+Clinique Oncologique,clinic,+213 48 54 89 20,Oncology,Boulevard Benzerdjeb,Sidi Bel Abbès,Sidi Bel Abbès,35.1909,0.6393,true,false,false,4.8
+Dr. Boudiaf Nadia,doctor,+213 48 54 90 31,Family Medicine,Rue Mohamed Khemisti,Sidi Bel Abbès,Sidi Bel Abbès,35.1892,0.6378,true,true,false,4.5
+Laboratoire Bactériologique,lab,+213 48 54 01 42,Laboratory,Avenue Boudiaf,Sidi Bel Abbès,Sidi Bel Abbès,35.1922,0.6404,true,false,false,4.6
+Hôpital Neurologique,hospital,+213 48 54 12 44,Neurology,Rue de la Liberté,Sidi Bel Abbès,Sidi Bel Abbès,35.1935,0.6413,true,false,false,4.7

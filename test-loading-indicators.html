@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Indicators Test - CityHealth</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/loading.css">
+  
+  <style>
+    .demo-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+    
+    .demo-container {
+      min-height: 200px;
+      border: 2px dashed #dee2e6;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .btn-group-demo {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="mb-4">Loading Indicators Test Page</h1>
+    <p class="lead mb-5">This page demonstrates all loading indicator types used in the CityHealth platform.</p>
+    
+    <!-- Global Loading Overlay -->
+    <div class="demo-section">
+      <h2>1. Global Loading Overlay</h2>
+      <p>Full-screen overlay with spinner for major operations.</p>
+      <button id="btn-global-loader" class="btn btn-primary">Show Global Loader</button>
+    </div>
+    
+    <!-- Inline Spinners -->
+    <div class="demo-section">
+      <h2>2. Inline Spinners</h2>
+      <p>Spinners that can be placed inline within content areas.</p>
+      
+      <div class="btn-group-demo">
+        <button id="btn-spinner-small" class="btn btn-secondary">Small Spinner</button>
+        <button id="btn-spinner-medium" class="btn btn-secondary">Medium Spinner</button>
+        <button id="btn-spinner-large" class="btn btn-secondary">Large Spinner</button>
+        <button id="btn-spinner-message" class="btn btn-secondary">Spinner with Message</button>
+      </div>
+      
+      <div id="spinner-container" class="demo-container"></div>
+    </div>
+    
+    <!-- Skeleton Screens -->
+    <div class="demo-section">
+      <h2>3. Skeleton Screens</h2>
+      <p>Placeholder content that mimics the structure of the actual content.</p>
+      
+      <div class="btn-group-demo">
+        <button id="btn-skeleton-card" class="btn btn-secondary">Card Skeleton</button>
+        <button id="btn-skeleton-list" class="btn btn-secondary">List Skeleton</button>
+        <button id="btn-skeleton-text" class="btn btn-secondary">Text Skeleton</button>
+        <button id="btn-skeleton-multiple" class="btn btn-secondary">Multiple Cards</button>
+      </div>
+      
+      <div id="skeleton-container" class="demo-container"></div>
+    </div>
+    
+    <!-- Progress Bars -->
+    <div class="demo-section">
+      <h2>4. Progress Bars</h2>
+      <p>Progress indicators for file uploads and long-running operations.</p>
+      
+      <div class="btn-group-demo">
+        <button id="btn-progress-start" class="btn btn-primary">Start Upload Simulation</button>
+        <button id="btn-progress-reset" class="btn btn-secondary">Reset</button>
+      </div>
+      
+      <div id="progress-container" class="demo-container"></div>
+    </div>
+    
+    <!-- Button Loading States -->
+    <div class="demo-section">
+      <h2>5. Button Loading States</h2>
+      <p>Buttons with loading spinners for form submissions.</p>
+      
+      <div class="btn-group-demo">
+        <button id="btn-loading-primary" class="btn btn-primary">Submit Form</button>
+        <button id="btn-loading-success" class="btn btn-success">Save Changes</button>
+        <button id="btn-loading-danger" class="btn btn-danger">Delete Item</button>
+      </div>
+    </div>
+    
+    <!-- Navigation Loader -->
+    <div class="demo-section">
+      <h2>6. Navigation Loader</h2>
+      <p>Top progress bar for page navigation.</p>
+      
+      <button id="btn-navigation-loader" class="btn btn-primary">Show Navigation Loader</button>
+    </div>
+    
+    <!-- Async Operation Wrapper -->
+    <div class="demo-section">
+      <h2>7. Async Operation Wrapper</h2>
+      <p>Automatically wrap async operations with loading indicators.</p>
+      
+      <div class="btn-group-demo">
+        <button id="btn-async-global" class="btn btn-primary">Global Loading</button>
+        <button id="btn-async-spinner" class="btn btn-secondary">Spinner Loading</button>
+        <button id="btn-async-skeleton" class="btn btn-secondary">Skeleton Loading</button>
+      </div>
+      
+      <div id="async-container" class="demo-container">
+        <p class="text-muted">Content will appear here after async operation</p>
+      </div>
+    </div>
+    
+    <!-- Search Results Simulation -->
+    <div class="demo-section">
+      <h2>8. Search Results Loading (Real-world Example)</h2>
+      <p>Simulates loading state for search results page.</p>
+      
+      <button id="btn-search-simulate" class="btn btn-primary">Simulate Search</button>
+      
+      <div id="search-results-container" class="demo-container"></div>
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/loading.js"></script>
+  
+  <script>
+    // Wait for LoadingIndicator to be available
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Global Loading Overlay
+      document.getElementById('btn-global-loader').addEventListener('click', () => {
+        const loaderId = LoadingIndicator.showGlobalLoader('Processing your request...');
+        setTimeout(() => {
+          LoadingIndicator.hideGlobalLoader(loaderId);
+        }, 3000);
+      });
+      
+      // 2. Inline Spinners
+      document.getElementById('btn-spinner-small').addEventListener('click', () => {
+        const container = document.getElementById('spinner-container');
+        container.innerHTML = '';
+        LoadingIndicator.showSpinner(container, { size: 'small', color: 'primary' });
+      });
+      
+      document.getElementById('btn-spinner-medium').addEventListener('click', () => {
+        const container = document.getElementById('spinner-container');
+        container.innerHTML = '';
+        LoadingIndicator.showSpinner(container, { size: 'medium', color: 'success' });
+      });
+      
+      document.getElementById('btn-spinner-large').addEventListener('click', () => {
+        const container = document.getElementById('spinner-container');
+        container.innerHTML = '';
+        LoadingIndicator.showSpinner(container, { size: 'large', color: 'danger' });
+      });
+      
+      document.getElementById('btn-spinner-message').addEventListener('click', () => {
+        const container = document.getElementById('spinner-container');
+        container.innerHTML = '';
+        LoadingIndicator.showSpinner(container, { 
+          size: 'medium', 
+          color: 'primary',
+          message: 'Loading healthcare providers...'
+        });
+      });
+      
+      // 3. Skeleton Screens
+      document.getElementById('btn-skeleton-card').addEventListener('click', () => {
+        const container = document.getElementById('skeleton-container');
+        LoadingIndicator.showSkeleton(container, { type: 'card', count: 1 });
+        
+        setTimeout(() => {
+          LoadingIndicator.hideSkeleton(container);
+          container.innerHTML = '<div class="card"><div class="card-body"><h5>Provider Name</h5><p>Actual content loaded!</p></div></div>';
+        }, 2000);
+      });
+      
+      document.getElementById('btn-skeleton-list').addEventListener('click', () => {
+        const container = document.getElementById('skeleton-container');
+        LoadingIndicator.showSkeleton(container, { type: 'list', count: 3 });
+        
+        setTimeout(() => {
+          LoadingIndicator.hideSkeleton(container);
+          container.innerHTML = '<ul class="list-group"><li class="list-group-item">Item 1</li><li class="list-group-item">Item 2</li><li class="list-group-item">Item 3</li></ul>';
+        }, 2000);
+      });
+      
+      document.getElementById('btn-skeleton-text').addEventListener('click', () => {
+        const container = document.getElementById('skeleton-container');
+        LoadingIndicator.showSkeleton(container, { type: 'text', count: 1 });
+        
+        setTimeout(() => {
+          LoadingIndicator.hideSkeleton(container);
+          container.innerHTML = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>';
+        }, 2000);
+      });
+      
+      document.getElementById('btn-skeleton-multiple').addEventListener('click', () => {
+        const container = document.getElementById('skeleton-container');
+        LoadingIndicator.showSkeleton(container, { type: 'card', count: 3 });
+        
+        setTimeout(() => {
+          LoadingIndicator.hideSkeleton(container);
+          container.innerHTML = '<div class="row"><div class="col-md-4"><div class="card"><div class="card-body">Card 1</div></div></div><div class="col-md-4"><div class="card"><div class="card-body">Card 2</div></div></div><div class="col-md-4"><div class="card"><div class="card-body">Card 3</div></div></div></div>';
+        }, 2000);
+      });
+      
+      // 4. Progress Bars
+      let progressInterval;
+      document.getElementById('btn-progress-start').addEventListener('click', () => {
+        const container = document.getElementById('progress-container');
+        container.innerHTML = '';
+        
+        let progress = 0;
+        const progressBar = LoadingIndicator.showProgress(container, progress, {
+          label: 'Uploading image...',
+          showPercentage: true,
+          color: 'primary'
+        });
+        
+        progressInterval = setInterval(() => {
+          progress += 5;
+          LoadingIndicator.updateProgress(progressBar, progress);
+          
+          if (progress >= 100) {
+            clearInterval(progressInterval);
+            setTimeout(() => {
+              LoadingIndicator.hideProgress(container);
+              container.innerHTML = '<div class="alert alert-success">Upload complete!</div>';
+            }, 500);
+          }
+        }, 200);
+      });
+      
+      document.getElementById('btn-progress-reset').addEventListener('click', () => {
+        clearInterval(progressInterval);
+        const container = document.getElementById('progress-container');
+        LoadingIndicator.hideProgress(container);
+        container.innerHTML = '';
+      });
+      
+      // 5. Button Loading States
+      document.getElementById('btn-loading-primary').addEventListener('click', function() {
+        LoadingIndicator.showButtonLoading(this, 'Submitting...');
+        setTimeout(() => {
+          LoadingIndicator.hideButtonLoading(this);
+        }, 2000);
+      });
+      
+      document.getElementById('btn-loading-success').addEventListener('click', function() {
+        LoadingIndicator.showButtonLoading(this, 'Saving...');
+        setTimeout(() => {
+          LoadingIndicator.hideButtonLoading(this);
+        }, 2000);
+      });
+      
+      document.getElementById('btn-loading-danger').addEventListener('click', function() {
+        LoadingIndicator.showButtonLoading(this, 'Deleting...');
+        setTimeout(() => {
+          LoadingIndicator.hideButtonLoading(this);
+        }, 2000);
+      });
+      
+      // 6. Navigation Loader
+      document.getElementById('btn-navigation-loader').addEventListener('click', () => {
+        LoadingIndicator.showNavigationLoading();
+        setTimeout(() => {
+          LoadingIndicator.hideNavigationLoading();
+        }, 3000);
+      });
+      
+      // 7. Async Operation Wrapper
+      document.getElementById('btn-async-global').addEventListener('click', async () => {
+        await LoadingIndicator.withLoading(
+          async () => {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return 'Operation complete!';
+          },
+          { type: 'global', message: 'Processing...' }
+        );
+      });
+      
+      document.getElementById('btn-async-spinner').addEventListener('click', async () => {
+        const container = document.getElementById('async-container');
+        const result = await LoadingIndicator.withLoading(
+          async () => {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return '<div class="alert alert-success">Data loaded successfully!</div>';
+          },
+          { type: 'spinner', target: container, message: 'Loading data...' }
+        );
+        container.innerHTML = result;
+      });
+      
+      document.getElementById('btn-async-skeleton').addEventListener('click', async () => {
+        const container = document.getElementById('async-container');
+        await LoadingIndicator.withLoading(
+          async () => {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            container.innerHTML = '<div class="card"><div class="card-body"><h5>Provider Profile</h5><p>Complete profile information loaded!</p></div></div>';
+          },
+          { type: 'skeleton', target: container, type: 'card', count: 1 }
+        );
+      });
+      
+      // 8. Search Results Simulation
+      document.getElementById('btn-search-simulate').addEventListener('click', async () => {
+        const container = document.getElementById('search-results-container');
+        
+        // Show skeleton loading
+        LoadingIndicator.showSkeleton(container, { type: 'card', count: 3 });
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Hide skeleton and show results
+        LoadingIndicator.hideSkeleton(container);
+        container.innerHTML = `
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Dr. Ahmed Clinic</h5>
+                  <p class="card-text">General Practice</p>
+                  <span class="badge bg-success">Verified</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">City Hospital</h5>
+                  <p class="card-text">Emergency Services</p>
+                  <span class="badge bg-success">Verified</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Central Pharmacy</h5>
+                  <p class="card-text">24/7 Available</p>
+                  <span class="badge bg-success">Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>

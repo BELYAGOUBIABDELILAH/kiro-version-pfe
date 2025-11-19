@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Card Component Test - CityHealth</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/themes.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+
+    <style>
+        body {
+            padding: 2rem 0;
+            background-color: var(--bg-secondary);
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .test-header {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Provider Card Component Test</h1>
+            <p class="text-secondary mb-0">Testing the provider card component with various configurations</p>
+        </div>
+
+        <div class="provider-grid" id="provider-list">
+            <!-- Provider cards will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- App modules -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/router.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/profile.js"></script>
+    <script src="assets/js/provider-card.js"></script>
+
+    <script>
+        // Sample provider data for testing
+        const sampleProviders = [
+            {
+                id: 'provider_001',
+                name: 'Dr. Ahmed Medical Center',
+                nameAr: 'مركز الدكتور أحمد الطبي',
+                nameFr: 'Centre Médical Dr. Ahmed',
+                type: 'clinic',
+                specialty: 'Cardiology',
+                address: {
+                    city: 'Sidi Bel Abbès',
+                    street: '123 Main Street'
+                },
+                images: ['https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400'],
+                verified: true,
+                rating: 4.8,
+                accessibility: true,
+                homeVisits: true,
+                available24_7: false
+            },
+            {
+                id: 'provider_002',
+                name: 'City General Hospital',
+                nameAr: 'مستشفى المدينة العام',
+                nameFr: 'Hôpital Général de la Ville',
+                type: 'hospital',
+                specialty: 'General Medicine',
+                address: {
+                    city: 'Sidi Bel Abbès',
+                    street: '456 Hospital Road'
+                },
+                images: ['https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=400'],
+                verified: true,
+                rating: 4.5,
+                accessibility: true,
+                homeVisits: false,
+                available24_7: true
+            },
+            {
+                id: 'provider_003',
+                name: 'Dr. Sarah Clinic',
+                nameAr: 'عيادة الدكتورة سارة',
+                nameFr: 'Clinique Dr. Sarah',
+                type: 'doctor',
+                specialty: 'Pediatrics',
+                address: {
+                    city: 'Sidi Bel Abbès',
+                    street: '789 Medical Plaza'
+                },
+                images: [],
+                verified: false,
+                rating: 4.2,
+                accessibility: false,
+                homeVisits: true,
+                available24_7: false
+            },
+            {
+                id: 'provider_004',
+                name: 'Green Cross Pharmacy',
+                nameAr: 'صيدلية الصليب الأخضر',
+                nameFr: 'Pharmacie Croix Verte',
+                type: 'pharmacy',
+                specialty: null,
+                address: {
+                    city: 'Sidi Bel Abbès',
+                    street: '321 Commerce Street'
+                },
+                images: ['https://images.unsplash.com/photo-1576602976047-174e57a47881?w=400'],
+                verified: true,
+                rating: 4.6,
+                accessibility: true,
+                homeVisits: false,
+                available24_7: true
+            },
+            {
+                id: 'provider_005',
+                name: 'MediLab Diagnostics',
+                nameAr: 'مختبر ميديلاب للتشخيص',
+                nameFr: 'Laboratoire MediLab',
+                type: 'lab',
+                specialty: 'Medical Testing',
+                address: {
+                    city: 'Sidi Bel Abbès',
+                    street: '555 Science Avenue'
+                },
+                images: ['https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400'],
+                verified: true,
+                rating: 4.7,
+                accessibility: true,
+                homeVisits: true,
+                available24_7: false
+            },
+            {
+                id: 'provider_006',
+                name: 'Family Health Clinic',
+                nameAr: 'عيادة صحة الأسرة',
+                nameFr: 'Clinique Santé Familiale',
+                type: 'clinic',
+                specialty: 'Family Medicine',
+                address: {
+                    city: 'Sidi Bel Abbès',
+                    street: '888 Family Way'
+                },
+                images: [],
+                verified: false,
+                rating: null,
+                accessibility: false,
+                homeVisits: false,
+                available24_7: false
+            }
+        ];
+
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            const providerList = document.getElementById('provider-list');
+
+            // Create provider cards
+            sampleProviders.forEach(provider => {
+                const card = ProviderCard.create(provider, true);
+                providerList.appendChild(card);
+            });
+
+            console.log('✅ Provider cards created successfully!');
+            console.log(`📊 Total cards: ${sampleProviders.length}`);
+        });
+    </script>
+</body>
+
+</html>

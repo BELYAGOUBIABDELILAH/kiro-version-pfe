@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import Initial Providers - CityHealth</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/loading.css">
+  <link rel="stylesheet" href="assets/css/error-handler.css">
+  
+  <style>
+    .import-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 30px;
+    }
+    
+    .drop-zone {
+      border: 2px dashed #007bff;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+    }
+    
+    .drop-zone:hover {
+      background-color: #e9ecef;
+      border-color: #0056b3;
+    }
+    
+    .drop-zone.dragover {
+      background-color: #cfe2ff;
+      border-color: #0056b3;
+    }
+    
+    .file-info {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e7f3ff;
+      border-radius: 5px;
+    }
+    
+    .import-results {
+      margin-top: 30px;
+    }
+    
+    .result-card {
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .result-success {
+      background-color: #d1e7dd;
+      border: 1px solid #badbcc;
+    }
+    
+    .result-error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c2c7;
+    }
+    
+    .error-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    
+    .progress-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="import-container">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">
+          <i class="bi bi-upload"></i> Import Initial Provider Data
+        </h2>
+      </div>
+      
+      <div class="card-body">
+        <!-- Instructions -->
+        <div class="alert alert-info">
+          <h5><i class="bi bi-info-circle"></i> Instructions</h5>
+          <ul class="mb-0">
+            <li>Upload a CSV file with provider data</li>
+            <li>Required fields: <strong>name, type</strong></li>
+            <li>Optional fields: phone, specialty, address, city, wilaya, latitude, longitude, accessibility, homevisits, available24_7, rating</li>
+            <li>All imported providers will be marked as <strong>verified</strong> and <strong>claimable</strong></li>
+            <li>Maximum 500 providers per import</li>
+          </ul>
+        </div>
+        
+        <!-- Drop Zone -->
+        <div id="dropZone" class="drop-zone">
+          <i class="bi bi-cloud-upload" style="font-size: 48px; color: #007bff;"></i>
+          <h4 class="mt-3">Drag & Drop CSV File Here</h4>
+          <p class="text-muted">or click to browse</p>
+          <input type="file" id="fileInput" accept=".csv" style="display: none;">
+        </div>
+        
+        <!-- File Info -->
+        <div id="fileInfo" class="file-info" style="display: none;">
+          <h5><i class="bi bi-file-earmark-text"></i> Selected File</h5>
+          <p class="mb-1"><strong>Name:</strong> <span id="fileName"></span></p>
+          <p class="mb-1"><strong>Size:</strong> <span id="fileSize"></span></p>
+          <p class="mb-0"><strong>Rows:</strong> <span id="fileRows"></span></p>
+        </div>
+        
+        <!-- Progress -->
+        <div id="progressContainer" class="progress-container" style="display: none;">
+          <h5>Importing...</h5>
+          <div class="progress">
+            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                 role="progressbar" style="width: 0%"></div>
+          </div>
+          <p class="text-center mt-2" id="progressText">Preparing import...</p>
+        </div>
+        
+        <!-- Import Button -->
+        <div class="text-center mt-4">
+          <button id="importBtn" class="btn btn-primary btn-lg" disabled>
+            <i class="bi bi-upload"></i> Import Providers
+          </button>
+          <button id="cancelBtn" class="btn btn-secondary btn-lg ms-2" style="display: none;">
+            <i class="bi bi-x-circle"></i> Cancel
+          </button>
+        </div>
+        
+        <!-- Results -->
+        <div id="importResults" class="import-results" style="display: none;">
+          <h4>Import Results</h4>
+          
+          <div id="successResult" class="result-card result-success" style="display: none;">
+            <h5><i class="bi bi-check-circle"></i> Success</h5>
+            <p class="mb-0">
+              Successfully imported <strong id="successCount">0</strong> out of <strong id="totalCount">0</strong> providers.
+            </p>
+          </div>
+          
+          <div id="errorResult" class="result-card result-error" style="display: none;">
+            <h5><i class="bi bi-exclamation-triangle"></i> Errors</h5>
+            <p>
+              <strong id="errorCount">0</strong> providers failed to import.
+            </p>
+            <div class="error-list">
+              <ul id="errorList"></ul>
+            </div>
+          </div>
+          
+          <div class="text-center mt-3">
+            <button id="resetBtn" class="btn btn-primary">
+              <i class="bi bi-arrow-clockwise"></i> Import Another File
+            </button>
+            <a href="pages/admin-dashboard.html" class="btn btn-success ms-2">
+              <i class="bi bi-speedometer2"></i> Go to Admin Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Processing import...</p>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+  
+  <!-- App Scripts -->
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script src="assets/js/loading.js"></script>
+  <script src="assets/js/error-handler.js"></script>
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <script>
+    let selectedFile = null;
+    let csvContent = null;
+    
+    // Check authentication on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const user = await authModule.getCurrentUser();
+        
+        if (!user) {
+          alert('You must be signed in to access this page.');
+          window.location.href = 'pages/auth.html';
+          return;
+        }
+        
+        if (user.role !== 'admin') {
+          alert('Only administrators can import provider data.');
+          window.location.href = 'index.html';
+          return;
+        }
+        
+      } catch (error) {
+        console.error('Authentication error:', error);
+        alert('Authentication error. Please sign in again.');
+        window.location.href = 'pages/auth.html';
+      }
+    });
+    
+    // Drop zone elements
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const importBtn = document.getElementById('importBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const importResults = document.getElementById('importResults');
+    
+    // Click to browse
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+      handleFile(e.target.files[0]);
+    });
+    
+    // Drag and drop events
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      
+      const file = e.dataTransfer.files[0];
+      if (file && file.name.endsWith('.csv')) {
+        handleFile(file);
+      } else {
+        alert('Please drop a CSV file.');
+      }
+    });
+    
+    // Handle file selection
+    function handleFile(file) {
+      if (!file) return;
+      
+      if (!file.name.endsWith('.csv')) {
+        alert('Please select a CSV file.');
+        return;
+      }
+      
+      selectedFile = file;
+      
+      // Read file
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        csvContent = e.target.result;
+        
+        // Count rows
+        const lines = csvContent.trim().split('\n');
+        const rowCount = lines.length - 1; // Exclude header
+        
+        // Display file info
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        document.getElementById('fileRows').textContent = rowCount + ' providers';
+        
+        fileInfo.style.display = 'block';
+        importBtn.disabled = false;
+      };
+      
+      reader.readAsText(file);
+    }
+    
+    // Format file size
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+    
+    // Import button click
+    importBtn.addEventListener('click', async () => {
+      if (!csvContent) {
+        alert('Please select a file first.');
+        return;
+      }
+      
+      if (!confirm('Are you sure you want to import these providers? This will add them to the database as verified and claimable profiles.')) {
+        return;
+      }
+      
+      try {
+        // Show progress
+        progressContainer.style.display = 'block';
+        importBtn.disabled = true;
+        cancelBtn.style.display = 'inline-block';
+        importResults.style.display = 'none';
+        
+        updateProgress(10, 'Validating CSV data...');
+        
+        // Import providers
+        updateProgress(30, 'Importing providers to database...');
+        const results = await adminModule.bulkImportProviders(csvContent);
+        
+        updateProgress(100, 'Import complete!');
+        
+        // Hide progress
+        setTimeout(() => {
+          progressContainer.style.display = 'none';
+          displayResults(results);
+        }, 500);
+        
+      } catch (error) {
+        console.error('Import error:', error);
+        progressContainer.style.display = 'none';
+        alert('Import failed: ' + error.message);
+        importBtn.disabled = false;
+        cancelBtn.style.display = 'none';
+      }
+    });
+    
+    // Update progress
+    function updateProgress(percent, text) {
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      
+      progressBar.style.width = percent + '%';
+      progressBar.setAttribute('aria-valuenow', percent);
+      progressText.textContent = text;
+    }
+    
+    // Display results
+    function displayResults(results) {
+      importResults.style.display = 'block';
+      
+      // Success
+      if (results.success > 0) {
+        document.getElementById('successResult').style.display = 'block';
+        document.getElementById('successCount').textContent = results.success;
+        document.getElementById('totalCount').textContent = results.total;
+      }
+      
+      // Errors
+      if (results.errors && results.errors.length > 0) {
+        document.getElementById('errorResult').style.display = 'block';
+        document.getElementById('errorCount').textContent = results.errors.length;
+        
+        const errorList = document.getElementById('errorList');
+        errorList.innerHTML = '';
+        
+        results.errors.forEach(error => {
+          const li = document.createElement('li');
+          li.textContent = `Row ${error.row}: ${error.error}`;
+          errorList.appendChild(li);
+        });
+      }
+      
+      // Hide buttons
+      importBtn.style.display = 'none';
+      cancelBtn.style.display = 'none';
+    }
+    
+    // Reset button
+    resetBtn.addEventListener('click', () => {
+      selectedFile = null;
+      csvContent = null;
+      fileInput.value = '';
+      fileInfo.style.display = 'none';
+      importResults.style.display = 'none';
+      progressContainer.style.display = 'none';
+      importBtn.disabled = true;
+      importBtn.style.display = 'inline-block';
+      cancelBtn.style.display = 'none';
+      
+      document.getElementById('successResult').style.display = 'none';
+      document.getElementById('errorResult').style.display = 'none';
+    });
+    
+    // Cancel button
+    cancelBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to cancel the import?')) {
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>

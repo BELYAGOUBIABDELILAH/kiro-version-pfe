@@ -1,0 +1,79 @@
+<!-- Provider Card Component Template -->
+<!-- This is a template that will be used by JavaScript to create provider cards -->
+<article class="provider-card" data-provider-id="" role="article" tabindex="0">
+  <!-- Provider Image -->
+  <div class="provider-card-image-wrapper">
+    <img src="" alt="" class="provider-card-image" loading="lazy">
+    <div class="provider-card-image-placeholder d-none">
+      <i class="bi bi-building" aria-hidden="true"></i>
+    </div>
+    <!-- Verified Badge Overlay -->
+    <div class="verified-badge-overlay d-none">
+      <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+      <span class="visually-hidden">Verified provider</span>
+    </div>
+  </div>
+  
+  <!-- Provider Content -->
+  <div class="provider-card-content">
+    <!-- Title and Rating -->
+    <div class="provider-card-header">
+      <h3 class="provider-card-title"></h3>
+      <div class="provider-card-rating d-none">
+        <i class="bi bi-star-fill" aria-hidden="true"></i>
+        <span class="rating-value">0.0</span>
+        <span class="visually-hidden">out of 5 stars</span>
+      </div>
+    </div>
+    
+    <!-- Provider Type and Specialty -->
+    <div class="provider-card-meta">
+      <span class="provider-type-badge">
+        <i class="bi bi-building" aria-hidden="true"></i>
+        <span class="provider-type"></span>
+      </span>
+      <span class="provider-specialty d-none"></span>
+    </div>
+    
+    <!-- Location -->
+    <div class="provider-card-location">
+      <i class="bi bi-geo-alt" aria-hidden="true"></i>
+      <span class="provider-location"></span>
+    </div>
+    
+    <!-- Badges for Features -->
+    <div class="provider-card-badges">
+      <span class="badge badge-success accessibility-badge d-none">
+        <i class="bi bi-universal-access" aria-hidden="true"></i>
+        <span data-i18n="provider.accessible">Accessible</span>
+      </span>
+      
+      <span class="badge badge-info home-visit-badge d-none">
+        <i class="bi bi-house" aria-hidden="true"></i>
+        <span data-i18n="provider.homeVisits">Home Visits</span>
+      </span>
+      
+      <span class="badge badge-warning emergency-badge d-none">
+        <i class="bi bi-lightning-fill" aria-hidden="true"></i>
+        <span data-i18n="provider.emergency">24/7</span>
+      </span>
+    </div>
+    
+    <!-- Description (optional) -->
+    <p class="provider-card-description d-none"></p>
+    
+    <!-- Actions -->
+    <div class="provider-card-actions">
+      <button class="btn btn-primary btn-sm view-profile-btn" type="button">
+        <i class="bi bi-eye" aria-hidden="true"></i>
+        <span data-i18n="provider.viewProfile">View Profile</span>
+      </button>
+      
+      <button class="btn btn-outline-danger btn-sm favorite-btn" type="button" 
+              aria-label="Add to favorites" title="Add to favorites">
+        <i class="bi bi-heart" aria-hidden="true"></i>
+        <span class="favorite-text visually-hidden" data-i18n="provider.favorite">Favorite</span>
+      </button>
+    </div>
+  </div>
+</article>

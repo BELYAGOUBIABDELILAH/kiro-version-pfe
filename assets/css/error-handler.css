@@ -1,0 +1,335 @@
+/**
+ * Error Handler Styles
+ * Styles for notifications, error messages, and offline indicator
+ */
+
+/* Notification Container */
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+html[dir="rtl"] .notification-container {
+  right: auto;
+  left: 20px;
+}
+
+/* Notification Base */
+.notification {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  min-width: 300px;
+}
+
+html[dir="rtl"] .notification {
+  transform: translateX(-100%);
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Notification Content */
+.notification-content {
+  flex: 1;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  word-wrap: break-word;
+}
+
+/* Notification Dismiss Button */
+.notification-dismiss {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  min-width: auto;
+  min-height: auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.notification-dismiss:hover,
+.notification-dismiss:focus {
+  opacity: 1;
+}
+
+/* Error Notification */
+.notification-error {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+[data-theme="dark"] .notification-error {
+  background-color: #5a1f1f;
+  color: #f8d7da;
+  border-color: #842029;
+}
+
+/* Success Notification */
+.notification-success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+[data-theme="dark"] .notification-success {
+  background-color: #0f5132;
+  color: #d1e7dd;
+  border-color: #198754;
+}
+
+/* Warning Notification */
+.notification-warning {
+  background-color: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffecb5;
+}
+
+[data-theme="dark"] .notification-warning {
+  background-color: #664d03;
+  color: #fff3cd;
+  border-color: #cc9a06;
+}
+
+/* Info Notification */
+.notification-info {
+  background-color: #cff4fc;
+  color: #055160;
+  border: 1px solid #b6effb;
+}
+
+[data-theme="dark"] .notification-info {
+  background-color: #055160;
+  color: #cff4fc;
+  border-color: #0891b2;
+}
+
+/* Offline Indicator */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #dc3545;
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  z-index: 9999;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.offline-indicator.show {
+  transform: translateY(0);
+}
+
+.offline-indicator .offline-icon {
+  margin-right: var(--spacing-sm);
+  font-size: 1.2rem;
+}
+
+html[dir="rtl"] .offline-indicator .offline-icon {
+  margin-right: 0;
+  margin-left: var(--spacing-sm);
+}
+
+.offline-indicator .offline-text {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+/* Error Display Component */
+.error-display {
+  padding: var(--spacing-lg);
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+}
+
+[data-theme="dark"] .error-display {
+  background-color: #5a1f1f;
+  color: #f8d7da;
+  border-color: #842029;
+}
+
+.error-display-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.error-display-title::before {
+  content: '⚠️';
+  font-size: 1.5rem;
+}
+
+.error-display-message {
+  margin-bottom: var(--spacing-md);
+  line-height: var(--line-height-base);
+}
+
+.error-display-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.error-display-actions .btn {
+  min-height: 44px;
+}
+
+/* Retry Button */
+.btn-retry {
+  background-color: var(--link-color);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-retry:hover,
+.btn-retry:focus {
+  background-color: var(--link-hover);
+}
+
+.btn-retry:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .notification-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  html[dir="rtl"] .notification-container {
+    left: 10px;
+    right: 10px;
+  }
+
+  .notification {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .offline-indicator {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .error-display {
+    padding: var(--spacing-md);
+  }
+
+  .error-display-actions {
+    flex-direction: column;
+  }
+
+  .error-display-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .notification-container {
+    max-width: 350px;
+  }
+}
+
+/* Animation for error shake */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.notification-error.shake {
+  animation: shake 0.5s ease;
+}
+
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+  .notification {
+    border-width: 2px;
+  }
+
+  .notification-error {
+    background-color: #fff;
+    color: #000;
+    border-color: #dc3545;
+  }
+
+  .notification-success {
+    background-color: #fff;
+    color: #000;
+    border-color: #198754;
+  }
+
+  .notification-warning {
+    background-color: #fff;
+    color: #000;
+    border-color: #cc9a06;
+  }
+
+  .notification-info {
+    background-color: #fff;
+    color: #000;
+    border-color: #0891b2;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .notification,
+  .offline-indicator {
+    transition: none;
+  }
+
+  .notification.show {
+    animation: none;
+  }
+}

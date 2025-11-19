@@ -1,0 +1,701 @@
+<!-- Provider Dashboard Page -->
+<div class="container py-4">
+  <h1 class="mb-4" data-i18n="dashboard.title">Provider Dashboard</h1>
+  
+  <!-- Profile Completion Progress -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title" data-i18n="dashboard.profileCompletion">Profile Completion</h5>
+      <div class="progress" style="height: 25px;">
+        <div id="profile-progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <span id="profile-progress-text">0%</span>
+        </div>
+      </div>
+      <small class="text-muted mt-2 d-block" data-i18n="dashboard.completeProfileHint">Complete your profile to request verification</small>
+    </div>
+  </div>
+  
+  <!-- Verification Status -->
+  <div class="card mb-4" id="verification-status-card">
+    <div class="card-body">
+      <h5 class="card-title" data-i18n="dashboard.verificationStatus">Verification Status</h5>
+      <div id="verification-status-content">
+        <!-- Status will be loaded dynamically -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Profile Management -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title" data-i18n="dashboard.profileManagement">Profile Management</h5>
+      <div id="profile-management-content">
+        <!-- Profile form will be loaded dynamically -->
+        <p class="text-muted" data-i18n="dashboard.loadingProfile">Loading profile...</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Medical Ads Section -->
+  <div class="card mb-4" id="ads-section" style="display: none;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0" data-i18n="ads.myAds">My Medical Ads</h5>
+      <button class="btn btn-sm btn-primary" onclick="showCreateAdModal()" data-i18n="ads.createAd">Create Ad</button>
+    </div>
+    <div class="card-body">
+      <div id="ads-list-content">
+        <p class="text-muted" data-i18n="ads.loadingAds">Loading ads...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Ad Modal -->
+<div class="modal fade" id="createAdModal" tabindex="-1" aria-labelledby="createAdModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createAdModalLabel" data-i18n="ads.createNewAd">Create New Medical Ad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="create-ad-form">
+          <div class="mb-3">
+            <label for="ad-type" class="form-label" data-i18n="ads.adType">Ad Type</label>
+            <select class="form-select" id="ad-type" required>
+              <option value="">Select type...</option>
+              <option value="text" data-i18n="ads.textAd">Text Ad</option>
+              <option value="image" data-i18n="ads.imageAd">Image Ad</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="ad-title" class="form-label" data-i18n="ads.title">Title</label>
+            <input type="text" class="form-control" id="ad-title" maxlength="100" required>
+            <small class="form-text text-muted" data-i18n="ads.titleHint">Brief title for your ad (max 100 characters)</small>
+          </div>
+          
+          <div class="mb-3" id="text-content-group">
+            <label for="ad-description" class="form-label" data-i18n="ads.description">Description</label>
+            <textarea class="form-control" id="ad-description" rows="4" maxlength="500"></textarea>
+            <small class="form-text text-muted" data-i18n="ads.descriptionHint">Detailed description (max 500 characters)</small>
+          </div>
+          
+          <div class="mb-3" id="image-content-group" style="display: none;">
+            <label for="ad-image" class="form-label" data-i18n="ads.image">Ad Image</label>
+            <input type="file" class="form-control" id="ad-image" accept="image/*">
+            <small class="form-text text-muted" data-i18n="ads.imageHint">Upload an image for your ad (max 5MB, JPEG/PNG/WebP)</small>
+            <div id="image-preview" class="mt-2" style="display: none;">
+              <img id="preview-img" src="" alt="Preview" class="img-fluid" style="max-height: 200px;">
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="ad-start-date" class="form-label" data-i18n="ads.startDate">Start Date</label>
+              <input type="date" class="form-control" id="ad-start-date" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="ad-end-date" class="form-label" data-i18n="ads.endDate">End Date</label>
+              <input type="date" class="form-control" id="ad-end-date" required>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label" data-i18n="ads.displayLocations">Display Locations</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="display-homepage" value="homepage" checked>
+              <label class="form-check-label" for="display-homepage" data-i18n="ads.homepage">Homepage</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="display-search" value="search" checked>
+              <label class="form-check-label" for="display-search" data-i18n="ads.searchResults">Search Results</label>
+            </div>
+          </div>
+          
+          <!-- Ad Preview -->
+          <div class="mb-3">
+            <label class="form-label" data-i18n="ads.preview">Preview</label>
+            <div id="ad-preview" class="border rounded p-3 bg-light">
+              <p class="text-muted text-center" data-i18n="ads.previewHint">Fill in the form to see a preview</p>
+            </div>
+          </div>
+          
+          <div id="ad-error" class="alert alert-danger d-none" role="alert"></div>
+          <div id="ad-success" class="alert alert-success d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="submit-ad-btn" data-i18n="ads.submit">Submit Ad</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Verification Request Modal -->
+<div class="modal fade" id="verificationRequestModal" tabindex="-1" aria-labelledby="verificationRequestModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="verificationRequestModalLabel" data-i18n="verification.requestTitle">Request Verification</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="verification-request-form">
+          <div class="mb-3">
+            <label for="verification-documents" class="form-label" data-i18n="verification.uploadDocuments">Upload Verification Documents</label>
+            <input type="file" class="form-control" id="verification-documents" multiple accept="image/*,.pdf" required>
+            <small class="form-text text-muted" data-i18n="verification.documentsHint">Upload official documents (license, registration, etc.). Max 5MB per file.</small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" data-i18n="verification.requirements">Requirements:</label>
+            <ul class="small">
+              <li data-i18n="verification.req1">Official business license or medical license</li>
+              <li data-i18n="verification.req2">Proof of address (utility bill, lease agreement)</li>
+              <li data-i18n="verification.req3">Government-issued ID</li>
+            </ul>
+          </div>
+          <div id="verification-error" class="alert alert-danger d-none" role="alert"></div>
+          <div id="verification-success" class="alert alert-success d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="submit-verification-btn" data-i18n="verification.submit">Submit Request</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Provider Dashboard Logic
+(async function() {
+  // Check authentication
+  const user = await authModule.getCurrentUser();
+  
+  if (!user || user.role !== 'provider') {
+    window.location.hash = '#/auth';
+    return;
+  }
+  
+  let currentProviderId = null;
+  
+  // Load provider profile
+  async function loadProviderProfile() {
+    try {
+      // Find provider profile for current user
+      const snapshot = await db.collection('providers')
+        .where('ownerId', '==', user.uid)
+        .limit(1)
+        .get();
+      
+      if (snapshot.empty) {
+        // No profile exists, show create profile form
+        document.getElementById('profile-management-content').innerHTML = `
+          <p class="text-muted" data-i18n="dashboard.noProfile">You don't have a provider profile yet.</p>
+          <button class="btn btn-primary" onclick="createProfile()" data-i18n="dashboard.createProfile">Create Profile</button>
+        `;
+        return;
+      }
+      
+      const providerDoc = snapshot.docs[0];
+      currentProviderId = providerDoc.id;
+      const providerData = providerDoc.data();
+      
+      // Calculate profile completion
+      const completionPercentage = calculateProfileCompletion(providerData);
+      updateProgressBar(completionPercentage);
+      
+      // Load verification status
+      await loadVerificationStatus(currentProviderId, providerData);
+      
+      // Load profile form (simplified for now)
+      document.getElementById('profile-management-content').innerHTML = `
+        <div class="mb-3">
+          <strong data-i18n="profile.name">Name:</strong> ${providerData.name || 'N/A'}
+        </div>
+        <div class="mb-3">
+          <strong data-i18n="profile.type">Type:</strong> ${providerData.type || 'N/A'}
+        </div>
+        <div class="mb-3">
+          <strong data-i18n="profile.phone">Phone:</strong> ${providerData.phone || 'N/A'}
+        </div>
+        <div class="mb-3">
+          <strong data-i18n="profile.verified">Verified:</strong> 
+          ${providerData.verified ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-secondary">No</span>'}
+        </div>
+        <button class="btn btn-primary" onclick="editProfile()" data-i18n="dashboard.editProfile">Edit Profile</button>
+      `;
+      
+    } catch (error) {
+      console.error('Error loading provider profile:', error);
+      document.getElementById('profile-management-content').innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          <span data-i18n="error.loadingProfile">Error loading profile. Please try again.</span>
+        </div>
+      `;
+    }
+  }
+  
+  // Calculate profile completion percentage
+  function calculateProfileCompletion(providerData) {
+    const fields = ['name', 'type', 'phone', 'address', 'specialty', 'hours'];
+    let completed = 0;
+    
+    fields.forEach(field => {
+      if (providerData[field]) {
+        completed++;
+      }
+    });
+    
+    if (providerData.images && providerData.images.length > 0) {
+      completed++;
+    }
+    
+    return Math.round((completed / (fields.length + 1)) * 100);
+  }
+  
+  // Update progress bar
+  function updateProgressBar(percentage) {
+    const progressBar = document.getElementById('profile-progress-bar');
+    const progressText = document.getElementById('profile-progress-text');
+    
+    progressBar.style.width = percentage + '%';
+    progressBar.setAttribute('aria-valuenow', percentage);
+    progressText.textContent = percentage + '%';
+    
+    if (percentage >= 70) {
+      progressBar.classList.remove('bg-warning');
+      progressBar.classList.add('bg-success');
+    } else {
+      progressBar.classList.remove('bg-success');
+      progressBar.classList.add('bg-warning');
+    }
+  }
+  
+  // Load verification status
+  async function loadVerificationStatus(providerId, providerData) {
+    try {
+      const requests = await adminModule.getProviderVerificationRequests();
+      const statusContent = document.getElementById('verification-status-content');
+      
+      if (providerData.verified) {
+        statusContent.innerHTML = `
+          <div class="alert alert-success" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span data-i18n="verification.verified">Your profile is verified!</span>
+          </div>
+        `;
+        return;
+      }
+      
+      const pendingRequest = requests.find(r => r.status === 'pending');
+      
+      if (pendingRequest) {
+        statusContent.innerHTML = `
+          <div class="alert alert-info" role="alert">
+            <i class="bi bi-clock-fill"></i>
+            <span data-i18n="verification.pending">Your verification request is pending review.</span>
+          </div>
+          <small class="text-muted">
+            <span data-i18n="verification.submittedOn">Submitted on:</span> 
+            ${pendingRequest.submittedAt ? new Date(pendingRequest.submittedAt.toDate()).toLocaleDateString() : 'N/A'}
+          </small>
+        `;
+        return;
+      }
+      
+      const deniedRequest = requests.find(r => r.status === 'denied');
+      
+      if (deniedRequest) {
+        statusContent.innerHTML = `
+          <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span data-i18n="verification.denied">Your verification request was denied.</span>
+            <br>
+            <strong data-i18n="verification.reason">Reason:</strong> ${deniedRequest.denialReason || 'N/A'}
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="requestVerification()" data-i18n="verification.resubmit">Resubmit Request</button>
+        `;
+        return;
+      }
+      
+      // No verification request yet
+      const completionPercentage = calculateProfileCompletion(providerData);
+      
+      if (completionPercentage >= 70) {
+        statusContent.innerHTML = `
+          <div class="alert alert-secondary" role="alert">
+            <span data-i18n="verification.notVerified">Your profile is not verified yet.</span>
+          </div>
+          <button class="btn btn-primary" onclick="requestVerification()" data-i18n="verification.request">Request Verification</button>
+        `;
+      } else {
+        statusContent.innerHTML = `
+          <div class="alert alert-secondary" role="alert">
+            <span data-i18n="verification.completeProfile">Complete your profile (at least 70%) before requesting verification.</span>
+          </div>
+          <button class="btn btn-secondary" disabled data-i18n="verification.request">Request Verification</button>
+        `;
+      }
+      
+    } catch (error) {
+      console.error('Error loading verification status:', error);
+    }
+  }
+  
+  // Request verification
+  window.requestVerification = function() {
+    const modal = new bootstrap.Modal(document.getElementById('verificationRequestModal'));
+    modal.show();
+  };
+  
+  // Submit verification request
+  document.getElementById('submit-verification-btn').addEventListener('click', async function() {
+    const documentsInput = document.getElementById('verification-documents');
+    const errorDiv = document.getElementById('verification-error');
+    const successDiv = document.getElementById('verification-success');
+    const submitBtn = this;
+    
+    // Hide previous messages
+    errorDiv.classList.add('d-none');
+    successDiv.classList.add('d-none');
+    
+    // Validate
+    if (!documentsInput.files || documentsInput.files.length === 0) {
+      errorDiv.textContent = 'Please upload at least one document';
+      errorDiv.classList.remove('d-none');
+      return;
+    }
+    
+    try {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+      
+      // Convert FileList to Array
+      const documents = Array.from(documentsInput.files);
+      
+      // Submit verification request
+      await adminModule.submitVerificationRequest(currentProviderId, documents, 'new');
+      
+      successDiv.textContent = 'Verification request submitted successfully!';
+      successDiv.classList.remove('d-none');
+      
+      // Reload verification status after 2 seconds
+      setTimeout(() => {
+        bootstrap.Modal.getInstance(document.getElementById('verificationRequestModal')).hide();
+        loadProviderProfile();
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error submitting verification request:', error);
+      errorDiv.textContent = error.message || 'Failed to submit verification request';
+      errorDiv.classList.remove('d-none');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Request';
+    }
+  });
+  
+  // Placeholder functions
+  window.createProfile = function() {
+    alert('Create profile functionality will be implemented in profile management task');
+  };
+  
+  window.editProfile = function() {
+    alert('Edit profile functionality will be implemented in profile management task');
+  };
+  
+  // Load provider ads
+  async function loadProviderAds() {
+    try {
+      const ads = await adsModule.getProviderAds();
+      const adsListContent = document.getElementById('ads-list-content');
+      
+      if (ads.length === 0) {
+        adsListContent.innerHTML = `
+          <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <span data-i18n="ads.noAds">You haven't created any ads yet.</span>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '<div class="list-group">';
+      
+      ads.forEach(ad => {
+        const statusBadge = {
+          'pending': '<span class="badge bg-warning">Pending</span>',
+          'approved': '<span class="badge bg-success">Approved</span>',
+          'rejected': '<span class="badge bg-danger">Rejected</span>'
+        }[ad.status] || '<span class="badge bg-secondary">Unknown</span>';
+        
+        const startDate = ad.startDate ? new Date(ad.startDate.toDate()).toLocaleDateString() : 'N/A';
+        const endDate = ad.endDate ? new Date(ad.endDate.toDate()).toLocaleDateString() : 'N/A';
+        
+        html += `
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h6 class="mb-1">
+                  ${ad.title || 'Untitled Ad'}
+                  ${statusBadge}
+                  <span class="badge bg-info ms-1">${ad.type === 'text' ? 'Text' : 'Image'}</span>
+                </h6>
+                <p class="mb-1">
+                  <strong data-i18n="ads.period">Period:</strong> ${startDate} - ${endDate}<br>
+                  ${ad.description ? `<small>${ad.description.substring(0, 100)}${ad.description.length > 100 ? '...' : ''}</small>` : ''}
+                </p>
+                ${ad.status === 'rejected' && ad.rejectionReason ? `
+                  <div class="alert alert-warning alert-sm mt-2 mb-0">
+                    <strong data-i18n="ads.rejectionReason">Rejection Reason:</strong> ${ad.rejectionReason}
+                  </div>
+                ` : ''}
+              </div>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteProviderAd('${ad.id}')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      adsListContent.innerHTML = html;
+      
+    } catch (error) {
+      console.error('Error loading provider ads:', error);
+      document.getElementById('ads-list-content').innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          <span data-i18n="error.loadingAds">Error loading ads. Please try again.</span>
+        </div>
+      `;
+    }
+  }
+  
+  // Show create ad modal
+  window.showCreateAdModal = function() {
+    // Reset form
+    document.getElementById('create-ad-form').reset();
+    document.getElementById('ad-error').classList.add('d-none');
+    document.getElementById('ad-success').classList.add('d-none');
+    document.getElementById('image-preview').style.display = 'none';
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('ad-start-date').min = today;
+    document.getElementById('ad-end-date').min = today;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('createAdModal'));
+    modal.show();
+  };
+  
+  // Handle ad type change
+  document.getElementById('ad-type').addEventListener('change', function() {
+    const type = this.value;
+    const textGroup = document.getElementById('text-content-group');
+    const imageGroup = document.getElementById('image-content-group');
+    const descriptionField = document.getElementById('ad-description');
+    const imageField = document.getElementById('ad-image');
+    
+    if (type === 'text') {
+      textGroup.style.display = 'block';
+      imageGroup.style.display = 'none';
+      descriptionField.required = true;
+      imageField.required = false;
+    } else if (type === 'image') {
+      textGroup.style.display = 'none';
+      imageGroup.style.display = 'block';
+      descriptionField.required = false;
+      imageField.required = true;
+    }
+    
+    updateAdPreview();
+  });
+  
+  // Handle image preview
+  document.getElementById('ad-image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('preview-img').src = e.target.result;
+        document.getElementById('image-preview').style.display = 'block';
+        updateAdPreview();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      document.getElementById('image-preview').style.display = 'none';
+    }
+  });
+  
+  // Update preview on form changes
+  ['ad-title', 'ad-description'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateAdPreview);
+  });
+  
+  // Update ad preview
+  function updateAdPreview() {
+    const type = document.getElementById('ad-type').value;
+    const title = document.getElementById('ad-title').value;
+    const description = document.getElementById('ad-description').value;
+    const previewDiv = document.getElementById('ad-preview');
+    
+    if (!type || !title) {
+      previewDiv.innerHTML = '<p class="text-muted text-center" data-i18n="ads.previewHint">Fill in the form to see a preview</p>';
+      return;
+    }
+    
+    if (type === 'text') {
+      previewDiv.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${title}</h5>
+            <p class="card-text">${description || 'No description provided'}</p>
+            <span class="badge bg-primary">Sponsored</span>
+          </div>
+        </div>
+      `;
+    } else if (type === 'image') {
+      const imgSrc = document.getElementById('preview-img').src;
+      previewDiv.innerHTML = `
+        <div class="card">
+          <div class="card-body text-center">
+            ${imgSrc ? `<img src="${imgSrc}" class="img-fluid mb-2" style="max-height: 200px;" alt="${title}">` : '<p class="text-muted">No image selected</p>'}
+            <h5 class="card-title">${title}</h5>
+            <span class="badge bg-primary">Sponsored</span>
+          </div>
+        </div>
+      `;
+    }
+  }
+  
+  // Submit ad
+  document.getElementById('submit-ad-btn').addEventListener('click', async function() {
+    const errorDiv = document.getElementById('ad-error');
+    const successDiv = document.getElementById('ad-success');
+    const submitBtn = this;
+    
+    // Hide previous messages
+    errorDiv.classList.add('d-none');
+    successDiv.classList.add('d-none');
+    
+    try {
+      // Validate form
+      const type = document.getElementById('ad-type').value;
+      const title = document.getElementById('ad-title').value.trim();
+      const description = document.getElementById('ad-description').value.trim();
+      const imageFile = document.getElementById('ad-image').files[0];
+      const startDate = document.getElementById('ad-start-date').value;
+      const endDate = document.getElementById('ad-end-date').value;
+      
+      if (!type) {
+        throw new Error('Please select an ad type');
+      }
+      
+      if (!title) {
+        throw new Error('Please enter a title');
+      }
+      
+      if (type === 'text' && !description) {
+        throw new Error('Please enter a description for text ads');
+      }
+      
+      if (type === 'image' && !imageFile) {
+        throw new Error('Please select an image for image ads');
+      }
+      
+      if (!startDate || !endDate) {
+        throw new Error('Please select start and end dates');
+      }
+      
+      // Get display locations
+      const displayLocations = [];
+      if (document.getElementById('display-homepage').checked) {
+        displayLocations.push('homepage');
+      }
+      if (document.getElementById('display-search').checked) {
+        displayLocations.push('search');
+      }
+      
+      if (displayLocations.length === 0) {
+        throw new Error('Please select at least one display location');
+      }
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+      
+      // Prepare ad data
+      let content = '';
+      
+      if (type === 'text') {
+        content = description;
+      } else if (type === 'image') {
+        // Upload image first
+        content = await adsModule.uploadAdImage(imageFile, currentProviderId);
+      }
+      
+      // Submit ad
+      await adsModule.submitAd({
+        type: type,
+        title: title,
+        description: description,
+        content: content,
+        startDate: startDate,
+        endDate: endDate,
+        displayLocations: displayLocations
+      });
+      
+      successDiv.textContent = 'Ad submitted successfully! It will be reviewed by an admin.';
+      successDiv.classList.remove('d-none');
+      
+      // Reload ads list after 2 seconds
+      setTimeout(() => {
+        bootstrap.Modal.getInstance(document.getElementById('createAdModal')).hide();
+        loadProviderAds();
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error submitting ad:', error);
+      errorDiv.textContent = error.message || 'Failed to submit ad';
+      errorDiv.classList.remove('d-none');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Ad';
+    }
+  });
+  
+  // Delete ad
+  window.deleteProviderAd = async function(adId) {
+    if (!confirm('Are you sure you want to delete this ad?')) {
+      return;
+    }
+    
+    try {
+      await adsModule.deleteAd(adId);
+      alert('Ad deleted successfully!');
+      loadProviderAds();
+    } catch (error) {
+      console.error('Error deleting ad:', error);
+      alert('Error deleting ad: ' + error.message);
+    }
+  };
+  
+  // Initialize
+  loadProviderProfile();
+  
+  // Load ads if provider is verified
+  setTimeout(async () => {
+    if (currentProviderId) {
+      const providerDoc = await db.collection('providers').doc(currentProviderId).get();
+      const providerData = providerDoc.data();
+      
+      if (providerData.verified) {
+        document.getElementById('ads-section').style.display = 'block';
+        loadProviderAds();
+      }
+    }
+  }, 1000);
+})();
+</script>

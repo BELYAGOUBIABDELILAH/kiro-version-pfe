@@ -1,0 +1,204 @@
+<!-- Search Results Page -->
+<div class="container py-4">
+  <!-- Search Bar -->
+  <div id="search-bar-container"></div>
+  
+  <div class="row">
+    <!-- Filters sidebar -->
+    <div class="col-lg-3 col-md-4 mb-4">
+      <div class="filter-sidebar">
+        <h3 class="filter-title" data-i18n="search.filters">Filters</h3>
+        
+        <!-- Provider Type Filter -->
+        <div class="filter-group">
+          <h4 class="filter-subtitle" data-i18n="search.serviceType">Service Type</h4>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-clinic" value="clinic">
+            <label for="filter-clinic" data-i18n="search.clinic">Clinic</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-hospital" value="hospital">
+            <label for="filter-hospital" data-i18n="search.hospital">Hospital</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-doctor" value="doctor">
+            <label for="filter-doctor" data-i18n="search.doctor">Doctor</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-pharmacy" value="pharmacy">
+            <label for="filter-pharmacy" data-i18n="search.pharmacy">Pharmacy</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-lab" value="lab">
+            <label for="filter-lab" data-i18n="search.lab">Laboratory</label>
+          </div>
+        </div>
+        
+        <!-- Accessibility Filter -->
+        <div class="filter-group">
+          <h4 class="filter-subtitle">Features</h4>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-accessibility" value="accessibility">
+            <label for="filter-accessibility" data-i18n="search.accessibility">Wheelchair Accessible</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-homeVisits" value="homeVisits">
+            <label for="filter-homeVisits" data-i18n="search.homeVisits">Home Visits</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-emergency" value="available24_7">
+            <label for="filter-emergency" data-i18n="search.emergency247">24/7 Emergency</label>
+          </div>
+        </div>
+        
+        <!-- Clear Filters Button -->
+        <button id="clear-filters-btn" class="btn btn-secondary w-100" data-i18n="search.clearFilters">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+    
+    <!-- Results area -->
+    <div class="col-lg-9 col-md-8">
+      <!-- Results header -->
+      <div class="results-header mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h2 class="mb-1" data-i18n="search.results">Search Results</h2>
+            <p class="text-muted mb-0" id="results-count">0 results found</p>
+          </div>
+          <div id="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Results container -->
+      <div id="results-container"></div>
+      
+      <!-- Pagination -->
+      <div id="pagination-container" class="mt-4"></div>
+      
+      <!-- Suggestions section (shown when no results or after results) -->
+      <div class="mt-5">
+        <div id="search-suggestions-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Load and inject inline ads for search results
+(async function() {
+  try {
+    // Wait for adsModule to be available
+    const waitForAdsModule = () => {
+      return new Promise((resolve) => {
+        if (window.adsModule) {
+          resolve();
+        } else {
+          const checkInterval = setInterval(() => {
+            if (window.adsModule) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 100);
+        }
+      });
+    };
+    
+    await waitForAdsModule();
+    
+    const ads = await adsModule.getApprovedAds(['search']);
+    
+    if (ads.length > 0) {
+      // Store ads globally for search module to use
+      window.searchInlineAds = ads;
+      
+      // Function to inject ads into results
+      window.injectSearchAds = function() {
+        const resultsContainer = document.getElementById('results-container');
+        if (!resultsContainer) return;
+        
+        // Remove any existing ad cards first
+        const existingAds = resultsContainer.querySelectorAll('.ad-card-inline');
+        existingAds.forEach(ad => ad.remove());
+        
+        const providerCards = resultsContainer.querySelectorAll('.provider-card');
+        let adIndex = 0;
+        let insertedCount = 0;
+        
+        // Insert ads after every 3 provider cards
+        providerCards.forEach((card, index) => {
+          if ((index + 1) % 3 === 0 && adIndex < ads.length) {
+            const ad = ads[adIndex];
+            const adCard = document.createElement('div');
+            adCard.className = 'mb-3 ad-card-inline';
+            adCard.innerHTML = adsModule.renderAdCard(ad);
+            
+            // Insert after current card
+            if (card.nextSibling) {
+              card.parentNode.insertBefore(adCard, card.nextSibling);
+            } else {
+              card.parentNode.appendChild(adCard);
+            }
+            
+            adIndex = (adIndex + 1) % ads.length; // Rotate through ads
+            insertedCount++;
+          }
+        });
+        
+        // Log analytics event
+        if (insertedCount > 0 && window.analytics) {
+          analytics.logEvent('view_search_ads', {
+            ad_count: insertedCount,
+            total_results: providerCards.length
+          });
+        }
+      };
+      
+      // Listen for search results rendered event
+      document.addEventListener('searchResultsRendered', function(e) {
+        window.injectSearchAds();
+      });
+      
+      // Also inject ads if results are already present
+      setTimeout(() => {
+        const resultsContainer = document.getElementById('results-container');
+        if (resultsContainer && resultsContainer.children.length > 0) {
+          window.injectSearchAds();
+        }
+      }, 500);
+    }
+  } catch (error) {
+    console.error('Error loading search inline ads:', error);
+  }
+})();
+
+// Initialize suggestions on search results page
+(function() {
+  const initSearchSuggestions = () => {
+    if (window.suggestionsUI && window.db) {
+      // Get search context from URL or localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      const serviceType = urlParams.get('type') || localStorage.getItem('lastSearchType');
+      const location = urlParams.get('location') || localStorage.getItem('lastSearchLocation');
+      
+      // Render suggestions
+      window.suggestionsUI.renderSuggestions('search-suggestions-container', {
+        userLocation: location || 'Sidi Bel Abbès',
+        serviceType: serviceType
+      });
+    } else {
+      setTimeout(initSearchSuggestions, 100);
+    }
+  };
+
+  // Start initialization
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSearchSuggestions);
+  } else {
+    initSearchSuggestions();
+  }
+})();
+</script>

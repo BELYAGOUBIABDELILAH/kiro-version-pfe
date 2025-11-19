@@ -1,0 +1,66 @@
+<!-- Search Bar Component -->
+<div class="search-bar" role="search" aria-label="Healthcare provider search">
+  <form id="search-form" role="search">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label for="search-query" class="form-label" data-i18n="search.query">Search</label>
+        <input 
+          type="text" 
+          class="form-control search-input" 
+          id="search-query" 
+          data-i18n-placeholder="search.queryPlaceholder"
+          placeholder="Search for healthcare providers..."
+          aria-label="Search for healthcare providers by name or specialty"
+          aria-describedby="search-help"
+          autocomplete="off"
+          aria-autocomplete="list"
+          aria-controls="autocomplete-dropdown"
+          aria-expanded="false"
+        >
+        <span id="search-help" class="visually-hidden">Enter provider name or specialty to search</span>
+      </div>
+      
+      <div class="col-md-3">
+        <label for="service-type" class="form-label" data-i18n="search.serviceType">Service Type</label>
+        <div class="position-relative">
+          <select 
+            class="form-select search-input" 
+            id="service-type"
+            aria-label="Filter by service type"
+          >
+            <option value="all" data-i18n="search.allTypes">All Types</option>
+            <option value="clinic" data-i18n="search.clinic">Clinic</option>
+            <option value="hospital" data-i18n="search.hospital">Hospital</option>
+            <option value="doctor" data-i18n="search.doctor">Doctor</option>
+            <option value="pharmacy" data-i18n="search.pharmacy">Pharmacy</option>
+            <option value="lab" data-i18n="search.lab">Laboratory</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <label for="location" class="form-label" data-i18n="search.location">Location</label>
+        <select 
+          class="form-select search-input" 
+          id="location"
+          aria-label="Filter by location"
+        >
+          <option value="all" data-i18n="search.allLocations">All Locations</option>
+          <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+        </select>
+      </div>
+      
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100" aria-label="Search for providers">
+          <i class="bi bi-search" aria-hidden="true"></i> 
+          <span data-i18n="search.searchButton">Search</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Autocomplete suggestions dropdown -->
+    <div id="autocomplete-dropdown" class="autocomplete-dropdown" role="listbox" aria-label="Search suggestions" style="display: none;">
+      <ul class="list-unstyled mb-0" id="autocomplete-list" role="presentation"></ul>
+    </div>
+  </form>
+</div>

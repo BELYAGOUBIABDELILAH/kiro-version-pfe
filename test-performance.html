@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityHealth Performance Tests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      margin: 5px 0;
+      background-color: #f8f9fa;
+      border-radius: 3px;
+    }
+    .metric.good {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .metric.warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .metric.bad {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .summary {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #e7f3ff;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>CityHealth Platform - Performance Tests</h1>
+  
+  <div class="test-section">
+    <h2>Page Load Performance</h2>
+    <button onclick="runPageLoadTests()">Run Page Load Tests</button>
+    <div id="page-load-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Resource Loading</h2>
+    <button onclick="runResourceTests()">Run Resource Tests</button>
+    <div id="resource-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>JavaScript Performance</h2>
+    <button onclick="runJSTests()">Run JavaScript Tests</button>
+    <div id="js-results"></div>
+  </div>
+
+  <div id="summary" class="summary" style="display: none;"></div>
+
+  <script>
+    // Performance Testing Functions
+    
+    function getMetricClass(value, good, warning) {
+      if (value <= good) return 'good';
+      if (value <= warning) return 'warning';
+      return 'bad';
+    }
+
+    function formatMetric(name, value, unit, good, warning) {
+      const className = getMetricClass(value, good, warning);
+      return `
+        <div class="metric ${className}">
+          <span>${name}</span>
+          <span>${value.toFixed(2)}${unit}</span>
+        </div>
+      `;
+    }
+
+    function runPageLoadTests() {
+      const results = document.getElementById('page-load-results');
+      results.innerHTML = '<p>Running tests...</p>';
+
+      if (!window.performance || !window.performance.timing) {
+        results.innerHTML = '<p>Performance API not available</p>';
+        return;
+      }
+
+      const timing = window.performance.timing;
+      const navigation = window.performance.navigation;
+
+      // Calculate metrics
+      const dns = timing.domainLookupEnd - timing.domainLookupStart;
+      const tcp = timing.connectEnd - timing.connectStart;
+      const request = timing.responseStart - timing.requestStart;
+      const response = timing.responseEnd - timing.responseStart;
+      const domProcessing = timing.domComplete - timing.domLoading;
+      const domContentLoaded = timing.domContentLoadedEventEnd - timing.navigationStart;
+      const pageLoad = timing.loadEventEnd - timing.navigationStart;
+
+      let html = '<h3>Navigation Timing Metrics</h3>';
+      html += formatMetric('DNS Lookup', dns, 'ms', 50, 100);
+      html += formatMetric('TCP Connection', tcp, 'ms', 100, 200);
+      html += formatMetric('Request Time', request, 'ms', 100, 200);
+      html += formatMetric('Response Time', response, 'ms', 200, 500);
+      html += formatMetric('DOM Processing', domProcessing, 'ms', 1000, 2000);
+      html += formatMetric('DOM Content Loaded', domContentLoaded, 'ms', 1500, 3000);
+      html += formatMetric('Page Load', pageLoad, 'ms', 2500, 5000);
+
+      // Paint timing
+      if (window.performance.getEntriesByType) {
+        const paintEntries = window.performance.getEntriesByType('paint');
+        if (paintEntries.length > 0) {
+          html += '<h3>Paint Timing</h3>';
+          paintEntries.forEach(entry => {
+            const time = entry.startTime;
+            const good = entry.name === 'first-contentful-paint' ? 1500 : 2500;
+            const warning = entry.name === 'first-contentful-paint' ? 2500 : 4000;
+            html += formatMetric(entry.name, time, 'ms', good, warning);
+          });
+        }
+      }
+
+      results.innerHTML = html;
+    }
+
+    function runResourceTests() {
+      const results = document.getElementById('resource-results');
+      results.innerHTML = '<p>Running tests...</p>';
+
+      if (!window.performance || !window.performance.getEntriesByType) {
+        results.innerHTML = '<p>Resource Timing API not available</p>';
+        return;
+      }
+
+      const resources = window.performance.getEntriesByType('resource');
+      
+      // Categorize resources
+      const categories = {
+        script: [],
+        stylesheet: [],
+        image: [],
+        other: []
+      };
+
+      resources.forEach(resource => {
+        if (resource.name.endsWith('.js')) {
+          categories.script.push(resource);
+        } else if (resource.name.endsWith('.css')) {
+          categories.stylesheet.push(resource);
+        } else if (resource.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+          categories.image.push(resource);
+        } else {
+          categories.other.push(resource);
+        }
+      });
+
+      // Calculate totals
+      const getTotalSize = (resources) => {
+        return resources.reduce((total, r) => total + (r.transferSize || 0), 0);
+      };
+
+      const getTotalDuration = (resources) => {
+        return resources.reduce((total, r) => total + r.duration, 0);
+      };
+
+      let html = '<h3>Resource Summary</h3>';
+      
+      const scriptSize = getTotalSize(categories.script) / 1024;
+      const cssSize = getTotalSize(categories.stylesheet) / 1024;
+      const imageSize = getTotalSize(categories.image) / 1024;
+      const totalSize = (scriptSize + cssSize + imageSize);
+
+      html += formatMetric('JavaScript Size', scriptSize, 'KB', 300, 500);
+      html += formatMetric('CSS Size', cssSize, 'KB', 100, 200);
+      html += formatMetric('Image Size', imageSize, 'KB', 500, 1000);
+      html += formatMetric('Total Size', totalSize, 'KB', 1000, 2000);
+
+      html += '<h3>Resource Counts</h3>';
+      html += `<div class="metric"><span>Scripts</span><span>${categories.script.length}</span></div>`;
+      html += `<div class="metric"><span>Stylesheets</span><span>${categories.stylesheet.length}</span></div>`;
+      html += `<div class="metric"><span>Images</span><span>${categories.image.length}</span></div>`;
+      html += `<div class="metric"><span>Total Resources</span><span>${resources.length}</span></div>`;
+
+      results.innerHTML = html;
+    }
+
+    function runJSTests() {
+      const results = document.getElementById('js-results');
+      results.innerHTML = '<p>Running tests...</p>';
+
+      let html = '<h3>JavaScript Performance Tests</h3>';
+
+      // Test 1: Array operations
+      const arraySize = 10000;
+      const testArray = Array.from({ length: arraySize }, (_, i) => i);
+      
+      const start1 = performance.now();
+      const filtered = testArray.filter(n => n % 2 === 0);
+      const end1 = performance.now();
+      html += formatMetric('Array Filter (10k items)', end1 - start1, 'ms', 5, 10);
+
+      // Test 2: Object operations
+      const start2 = performance.now();
+      const obj = {};
+      for (let i = 0; i < 1000; i++) {
+        obj[`key${i}`] = `value${i}`;
+      }
+      const end2 = performance.now();
+      html += formatMetric('Object Creation (1k props)', end2 - start2, 'ms', 5, 10);
+
+      // Test 3: DOM operations
+      const start3 = performance.now();
+      const div = document.createElement('div');
+      for (let i = 0; i < 100; i++) {
+        const child = document.createElement('span');
+        child.textContent = `Item ${i}`;
+        div.appendChild(child);
+      }
+      const end3 = performance.now();
+      html += formatMetric('DOM Creation (100 elements)', end3 - start3, 'ms', 10, 20);
+
+      // Test 4: JSON operations
+      const testData = { items: Array.from({ length: 1000 }, (_, i) => ({ id: i, name: `Item ${i}` })) };
+      
+      const start4 = performance.now();
+      const json = JSON.stringify(testData);
+      const end4 = performance.now();
+      html += formatMetric('JSON Stringify (1k items)', end4 - start4, 'ms', 5, 10);
+
+      const start5 = performance.now();
+      const parsed = JSON.parse(json);
+      const end5 = performance.now();
+      html += formatMetric('JSON Parse (1k items)', end5 - start5, 'ms', 5, 10);
+
+      // Memory usage (if available)
+      if (performance.memory) {
+        html += '<h3>Memory Usage</h3>';
+        const usedMB = performance.memory.usedJSHeapSize / 1024 / 1024;
+        const totalMB = performance.memory.totalJSHeapSize / 1024 / 1024;
+        const limitMB = performance.memory.jsHeapSizeLimit / 1024 / 1024;
+        
+        html += `<div class="metric"><span>Used Memory</span><span>${usedMB.toFixed(2)} MB</span></div>`;
+        html += `<div class="metric"><span>Total Memory</span><span>${totalMB.toFixed(2)} MB</span></div>`;
+        html += `<div class="metric"><span>Memory Limit</span><span>${limitMB.toFixed(2)} MB</span></div>`;
+      }
+
+      results.innerHTML = html;
+    }
+
+    // Run initial page load test on load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        runPageLoadTests();
+      }, 100);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!-- Medical Ads Carousel Component -->
+<!-- This component can be included in any page to display a carousel of approved ads -->
+<div class="medical-ads-section py-4" id="medical-ads-carousel" style="display: none;">
+  <div class="container">
+    <h3 class="mb-3" data-i18n="ads.featuredAds">Featured Medical Services</h3>
+    <div id="ads-carousel-content">
+      <!-- Ads will be loaded dynamically -->
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  /**
+   * Load and display ads carousel
+   * @param {string} location - Display location ('homepage' or 'search')
+   * @param {string} carouselId - ID for the carousel element (default: 'medicalAdsCarousel')
+   */
+  async function loadAdsCarousel(location = 'homepage', carouselId = 'medicalAdsCarousel') {
+    try {
+      // Wait for adsModule to be available
+      if (!window.adsModule) {
+        console.warn('Ads module not loaded yet, retrying...');
+        setTimeout(() => loadAdsCarousel(location, carouselId), 200);
+        return;
+      }
+      
+      const carouselSection = document.getElementById('medical-ads-carousel');
+      const carouselContent = document.getElementById('ads-carousel-content');
+      
+      if (!carouselContent) {
+        console.warn('Carousel content container not found');
+        return;
+      }
+      
+      // Get approved ads for this location
+      const ads = await adsModule.getApprovedAds([location]);
+      
+      if (ads.length === 0) {
+        carouselContent.innerHTML = '';
+        if (carouselSection) {
+          carouselSection.style.display = 'none';
+        }
+        return;
+      }
+      
+      // Show carousel section
+      if (carouselSection) {
+        carouselSection.style.display = 'block';
+      }
+      
+      // Build carousel HTML
+      let html = `
+        <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+          <div class="carousel-indicators">
+      `;
+      
+      // Add indicators
+      ads.forEach((ad, index) => {
+        html += `
+          <button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${index}" 
+            ${index === 0 ? 'class="active" aria-current="true"' : ''} 
+            aria-label="Slide ${index + 1}">
+          </button>
+        `;
+      });
+      
+      html += `
+          </div>
+          <div class="carousel-inner">
+      `;
+      
+      // Add carousel items
+      ads.forEach((ad, index) => {
+        html += `
+          <div class="carousel-item ${index === 0 ? 'active' : ''}">
+            <div class="card border-primary shadow-sm">
+              <div class="card-body">
+        `;
+        
+        if (ad.type === 'text') {
+          html += `
+                <h5 class="card-title">${escapeHtml(ad.title || 'Untitled')}</h5>
+                <p class="card-text">${escapeHtml(ad.description || ad.content || '')}</p>
+                <span class="badge bg-primary">Sponsored</span>
+          `;
+        } else if (ad.type === 'image') {
+          html += `
+                <div class="text-center">
+                  <img src="${escapeHtml(ad.content)}" 
+                       class="img-fluid mb-3" 
+                       style="max-height: 300px; object-fit: contain;" 
+                       alt="${escapeHtml(ad.title || 'Ad image')}"
+                       loading="lazy">
+                  <h5 class="card-title">${escapeHtml(ad.title || 'Untitled')}</h5>
+                  ${ad.description ? `<p class="card-text">${escapeHtml(ad.description)}</p>` : ''}
+                  <span class="badge bg-primary">Sponsored</span>
+                </div>
+          `;
+        }
+        
+        html += `
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      `;
+      
+      carouselContent.innerHTML = html;
+      
+      // Log analytics event
+      if (window.analytics) {
+        analytics.logEvent('view_ads_carousel', {
+          location: location,
+          ad_count: ads.length
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error loading ads carousel:', error);
+      const carouselContent = document.getElementById('ads-carousel-content');
+      if (carouselContent) {
+        carouselContent.innerHTML = '';
+      }
+      const carouselSection = document.getElementById('medical-ads-carousel');
+      if (carouselSection) {
+        carouselSection.style.display = 'none';
+      }
+    }
+  }
+  
+  /**
+   * Escape HTML to prevent XSS
+   * @param {string} text - Text to escape
+   * @returns {string} Escaped text
+   */
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Export function
+  window.loadAdsCarousel = loadAdsCarousel;
+  
+  // Auto-load if on homepage
+  const currentHash = window.location.hash;
+  if (currentHash === '' || currentHash === '#/' || currentHash === '#/home') {
+    // Wait a bit for other modules to load
+    setTimeout(() => loadAdsCarousel('homepage'), 500);
+  }
+})();
+</script>

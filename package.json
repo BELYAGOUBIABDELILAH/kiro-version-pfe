@@ -1,0 +1,39 @@
+{
+  "name": "cityhealth-platform",
+  "version": "1.0.0",
+  "description": "CityHealth Healthcare Directory Platform",
+  "scripts": {
+    "test": "jest --run",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "build": "node build-scripts/build.js",
+    "build:css": "node build-scripts/minify-css.js",
+    "build:js": "node build-scripts/minify-js.js",
+    "build:images": "node build-scripts/optimize-images.js",
+    "prebuild": "node build-scripts/clean.js",
+    "deploy": "npm run build && node build-scripts/deploy.js",
+    "deploy:hosting": "firebase deploy --only hosting --config firebase.production.json",
+    "deploy:rules": "firebase deploy --only firestore,storage",
+    "smoke-test": "node build-scripts/smoke-tests.js",
+    "dev": "node dev-server.js",
+    "serve:dist": "firebase serve --only hosting --config firebase.production.json"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "terser": "^5.24.0",
+    "clean-css": "^5.3.3",
+    "sharp": "^0.33.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "assets/js/**/*.js",
+      "!assets/js/firebase-config.js"
+    ]
+  }
+}

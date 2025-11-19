@@ -1,0 +1,194 @@
+{
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "emergency": "Emergency",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "search": {
+    "query": "Search",
+    "queryPlaceholder": "Search for healthcare providers...",
+    "serviceType": "Service Type",
+    "location": "Location",
+    "searchButton": "Search",
+    "allTypes": "All Types",
+    "allLocations": "All Locations",
+    "clinic": "Clinic",
+    "hospital": "Hospital",
+    "doctor": "Doctor",
+    "pharmacy": "Pharmacy",
+    "lab": "Laboratory",
+    "noResults": "No results found. Try different search terms.",
+    "resultsCount": "results found",
+    "filters": "Filters",
+    "accessibility": "Wheelchair Accessible",
+    "homeVisits": "Home Visits",
+    "emergency247": "24/7 Emergency",
+    "clearFilters": "Clear Filters",
+    "applyFilters": "Apply Filters"
+  },
+  "profile": {
+    "contact": "Contact Information",
+    "hours": "Operating Hours",
+    "location": "Location",
+    "photos": "Photos",
+    "verified": "Verified",
+    "accessible": "Wheelchair Accessible",
+    "homeVisits": "Home Visits Available",
+    "emergency": "24/7 Emergency"
+  },
+  "provider": {
+    "accessible": "Accessible",
+    "homeVisits": "Home Visits",
+    "emergency": "24/7",
+    "viewProfile": "View Profile",
+    "favorite": "Favorite",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "verified": "Verified provider",
+    "rating": "Rating",
+    "outOf5": "out of 5 stars",
+    "type": {
+      "clinic": "Clinic",
+      "hospital": "Hospital",
+      "doctor": "Doctor",
+      "pharmacy": "Pharmacy",
+      "lab": "Laboratory"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "button": "Sign In"
+    },
+    "register": {
+      "title": "Create Account",
+      "button": "Create Account"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "button": "Send Reset Link",
+      "success": "Password reset email sent! Check your inbox."
+    },
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "displayName": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "userType": "I am a",
+    "citizen": "Citizen",
+    "provider": "Healthcare Provider",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "or": "or",
+    "googleSignIn": "Sign in with Google",
+    "googleSignUp": "Sign up with Google",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Register here",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Sign in here",
+    "backToLogin": "Back to Sign In",
+    "acceptTerms": "I agree to the",
+    "termsLink": "Terms and Conditions",
+    "validation": {
+      "emailRequired": "Please enter a valid email address",
+      "passwordRequired": "Password must be at least 6 characters",
+      "nameRequired": "Please enter your name",
+      "passwordMatch": "Passwords must match",
+      "termsRequired": "You must accept the terms and conditions"
+    }
+  },
+  "suggestions": {
+    "title": "Suggested for You",
+    "subtitle": "Based on your activity and preferences",
+    "view": "View Profile",
+    "dismiss": "Dismiss"
+  },
+  "home": {
+    "welcome": "Welcome to CityHealth",
+    "subtitle": "Find trusted healthcare providers in Sidi Bel Abbès",
+    "featuredProviders": "Featured Healthcare Providers",
+    "viewAllProviders": "View All Providers",
+    "noFeaturedProviders": "No featured providers available at the moment."
+  },
+  "ads": {
+    "featuredAds": "Featured Medical Services"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "retry": "Retry"
+  },
+  "error": {
+    "network": "Network error. Please check your connection and try again.",
+    "auth": "Authentication error. Please sign in again.",
+    "permission": "You do not have permission to perform this action.",
+    "validation": "Please check your input and try again.",
+    "not_found": "The requested resource was not found.",
+    "server": "Server error. Please try again later.",
+    "unknown": "An unexpected error occurred. Please try again.",
+    "offline": "You are currently offline. Some features may not be available.",
+    "back_online": "You are back online.",
+    "email_in_use": "This email is already in use.",
+    "invalid_email": "Please enter a valid email address.",
+    "user_not_found": "User not found.",
+    "wrong_password": "Incorrect password.",
+    "weak_password": "Password is too weak. Please use a stronger password.",
+    "too_many_requests": "Too many attempts. Please try again later.",
+    "already_exists": "This resource already exists.",
+    "quota_exceeded": "Quota exceeded. Please try again later.",
+    "service_unavailable": "Service temporarily unavailable. Please try again.",
+    "upload_canceled": "Upload was canceled.",
+    "upload_failed": "Upload failed. Please try again."
+  },
+  "chatbot": {
+    "title": "CityHealth Assistant",
+    "status": "Online",
+    "toggle": "Open chatbot",
+    "close": "Close chatbot",
+    "typing": "Typing...",
+    "input": {
+      "placeholder": "Type your message...",
+      "label": "Chat message input"
+    },
+    "send": "Send message"
+  },
+  "emergency": {
+    "title": "Emergency Services - 24/7",
+    "subtitle": "Healthcare providers available around the clock",
+    "loadingMessage": "Loading emergency providers...",
+    "error": "Unable to load emergency providers. Please try again.",
+    "noProviders": "No emergency providers available at this time.",
+    "available247": "24/7 Available",
+    "phone": "Phone",
+    "address": "Address",
+    "callNow": "Call Now",
+    "viewProfile": "View Profile",
+    "viewAll": "View All Emergency Services",
+    "sectionTitle": "Emergency Services"
+  },
+  "footer": {
+    "description": "Your trusted healthcare directory for Sidi Bel Abbès, Algeria",
+    "quickLinks": "Quick Links",
+    "searchProviders": "Search Providers",
+    "emergencyServices": "Emergency Services",
+    "forProviders": "For Providers",
+    "contact": "Contact",
+    "language": "Language",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}

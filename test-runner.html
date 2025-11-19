@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityHealth Unit Tests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .test-suite {
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+    }
+    .test-suite h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    .test-case {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 3px;
+    }
+    .test-pass {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .test-fail {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .summary {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #e7f3ff;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>CityHealth Platform - Unit Tests</h1>
+  <div id="test-results"></div>
+  <div id="summary" class="summary"></div>
+
+  <script>
+    // Simple test framework
+    class TestRunner {
+      constructor() {
+        this.results = [];
+        this.currentSuite = null;
+      }
+
+      describe(name, fn) {
+        this.currentSuite = { name, tests: [] };
+        fn();
+        this.results.push(this.currentSuite);
+      }
+
+      test(name, fn) {
+        try {
+          fn();
+          this.currentSuite.tests.push({ name, passed: true });
+        } catch (error) {
+          this.currentSuite.tests.push({ name, passed: false, error: error.message });
+        }
+      }
+
+      expect(value) {
+        return {
+          toBe: (expected) => {
+            if (value !== expected) {
+              throw new Error(`Expected ${expected} but got ${value}`);
+            }
+          },
+          toEqual: (expected) => {
+            if (JSON.stringify(value) !== JSON.stringify(expected)) {
+              throw new Error(`Expected ${JSON.stringify(expected)} but got ${JSON.stringify(value)}`);
+            }
+          },
+          toHaveLength: (expected) => {
+            if (value.length !== expected) {
+              throw new Error(`Expected length ${expected} but got ${value.length}`);
+            }
+          },
+          toContain: (expected) => {
+            if (!value.includes(expected)) {
+              throw new Error(`Expected to contain ${expected}`);
+            }
+          },
+          toBeGreaterThanOrEqual: (expected) => {
+            if (value < expected) {
+              throw new Error(`Expected ${value} to be >= ${expected}`);
+            }
+          }
+        };
+      }
+
+      render() {
+        const container = document.getElementById('test-results');
+        let totalTests = 0;
+        let passedTests = 0;
+
+        this.results.forEach(suite => {
+          const suiteDiv = document.createElement('div');
+          suiteDiv.className = 'test-suite';
+          
+          const suiteTitle = document.createElement('h2');
+          suiteTitle.textContent = suite.name;
+          suiteDiv.appendChild(suiteTitle);
+
+          suite.tests.forEach(test => {
+            totalTests++;
+            const testDiv = document.createElement('div');
+            testDiv.className = `test-case ${test.passed ? 'test-pass' : 'test-fail'}`;
+            testDiv.textContent = `${test.passed ? '✓' : '✗'} ${test.name}`;
+            if (!test.passed) {
+              testDiv.textContent += ` - ${test.error}`;
+            } else {
+              passedTests++;
+            }
+            suiteDiv.appendChild(testDiv);
+          });
+
+          container.appendChild(suiteDiv);
+        });
+
+        const summary = document.getElementById('summary');
+        summary.textContent = `Tests: ${passedTests}/${totalTests} passed`;
+        summary.style.backgroundColor = passedTests === totalTests ? '#d4edda' : '#f8d7da';
+      }
+    }
+
+    const runner = new TestRunner();
+    const describe = runner.describe.bind(runner);
+    const test = runner.test.bind(runner);
+    const expect = runner.expect.bind(runner);
+
+    // Utils Tests
+    describe('Utils Module', () => {
+      const Utils = {
+        debounce: (func, delay) => {
+          let timeoutId;
+          return function(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+          };
+        },
+        
+        formatDate: (date) => {
+          if (!date) return '';
+          const d = new Date(date);
+          return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+      };
+
+      test('formatDate should format date correctly', () => {
+        const date = new Date('2024-01-15');
+        const formatted = Utils.formatDate(date);
+        expect(formatted).toContain('Jan');
+        expect(formatted).toContain('15');
+        expect(formatted).toContain('2024');
+      });
+
+      test('formatDate should return empty string for null', () => {
+        expect(Utils.formatDate(null)).toBe('');
+      });
+    });
+
+    // Search Tests
+    describe('Search Module', () => {
+      const SearchModule = {
+        filterByAccessibility: (providers, accessible) => {
+          if (!accessible) return providers;
+          return providers.filter(p => p.accessibility === true);
+        },
+
+        filterByHomeVisits: (providers, homeVisits) => {
+          if (!homeVisits) return providers;
+          return providers.filter(p => p.homeVisits === true);
+        },
+
+        sortByRating: (providers) => {
+          return [...providers].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        }
+      };
+
+      const mockProviders = [
+        { id: '1', name: 'Provider A', accessibility: true, homeVisits: false, rating: 4.5 },
+        { id: '2', name: 'Provider B', accessibility: false, homeVisits: true, rating: 4.8 },
+        { id: '3', name: 'Provider C', accessibility: true, homeVisits: true, rating: 4.2 }
+      ];
+
+      test('filterByAccessibility returns only accessible providers', () => {
+        const result = SearchModule.filterByAccessibility(mockProviders, true);
+        expect(result).toHaveLength(2);
+      });
+
+      test('filterByHomeVisits returns only home visit providers', () => {
+        const result = SearchModule.filterByHomeVisits(mockProviders, true);
+        expect(result).toHaveLength(2);
+      });
+
+      test('sortByRating sorts by rating descending', () => {
+        const result = SearchModule.sortByRating(mockProviders);
+        expect(result[0].rating).toBe(4.8);
+      });
+    });
+
+    // i18n Tests
+    describe('i18n Module', () => {
+      const mockTranslations = {
+        en: { 'nav.home': 'Home', 'nav.search': 'Search' },
+        ar: { 'nav.home': 'الرئيسية', 'nav.search': 'بحث' },
+        fr: { 'nav.home': 'Accueil', 'nav.search': 'Rechercher' }
+      };
+
+      const i18n = {
+        currentLanguage: 'en',
+        translations: {},
+        setLanguage: function(lang) {
+          if (mockTranslations[lang]) {
+            this.currentLanguage = lang;
+            this.translations = mockTranslations[lang];
+            return true;
+          }
+          return false;
+        },
+        translate: function(key) {
+          return this.translations[key] || key;
+        }
+      };
+
+      test('setLanguage sets Arabic correctly', () => {
+        const result = i18n.setLanguage('ar');
+        expect(result).toBe(true);
+      });
+
+      test('translate returns correct English translation', () => {
+        i18n.setLanguage('en');
+        expect(i18n.translate('nav.home')).toBe('Home');
+      });
+
+      test('translate returns correct Arabic translation', () => {
+        i18n.setLanguage('ar');
+        expect(i18n.translate('nav.home')).toBe('الرئيسية');
+      });
+    });
+
+    // Auth Tests
+    describe('Auth Module', () => {
+      const AuthModule = {
+        validateEmail: (email) => {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        },
+        validatePassword: (password) => {
+          return password && password.length >= 6;
+        },
+        checkPasswordStrength: (password) => {
+          if (!password || password.length < 6) return 'weak';
+          if (password.length < 10) return 'medium';
+          
+          const hasUpper = /[A-Z]/.test(password);
+          const hasLower = /[a-z]/.test(password);
+          const hasNumber = /[0-9]/.test(password);
+          const hasSpecial = /[!@#$%^&*]/.test(password);
+          
+          const strength = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+          return (strength >= 3 && password.length >= 10) ? 'strong' : 'medium';
+        }
+      };
+
+      test('validateEmail accepts valid email', () => {
+        expect(AuthModule.validateEmail('user@example.com')).toBe(true);
+      });
+
+      test('validateEmail rejects invalid email', () => {
+        expect(AuthModule.validateEmail('invalid')).toBe(false);
+      });
+
+      test('validatePassword accepts valid password', () => {
+        expect(AuthModule.validatePassword('password123')).toBe(true);
+      });
+
+      test('validatePassword rejects short password', () => {
+        expect(AuthModule.validatePassword('12345')).toBe(false);
+      });
+
+      test('checkPasswordStrength returns weak for short passwords', () => {
+        expect(AuthModule.checkPasswordStrength('123')).toBe('weak');
+      });
+
+      test('checkPasswordStrength returns strong for complex passwords', () => {
+        expect(AuthModule.checkPasswordStrength('Password123!')).toBe('strong');
+      });
+    });
+
+    // Render results
+    runner.render();
+  </script>
+</body>
+</html>

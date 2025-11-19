@@ -1,0 +1,107 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isProvider() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'provider';
+    }
+    
+    function isVerifiedProvider() {
+      return isProvider() && 
+             get(/databases/$(database)/documents/providers/$(request.auth.uid)).data.verified == true;
+    }
+    
+    function isOwner(ownerId) {
+      return isAuthenticated() && request.auth.uid == ownerId;
+    }
+    
+    // Providers collection - public read, authenticated write with ownership
+    match /providers/{providerId} {
+      allow read: if true; // Public read access for all users
+      
+      allow create: if isAuthenticated() && 
+                      isProvider() &&
+                      request.resource.data.ownerId == request.auth.uid &&
+                      request.resource.data.keys().hasAll(['type', 'name', 'phone', 'address']);
+      
+      allow update: if isAuthenticated() && 
+                      (isOwner(resource.data.ownerId) || isAdmin()) &&
+                      // Prevent non-admins from changing verification status
+                      (isAdmin() || request.resource.data.verified == resource.data.verified);
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Users collection - owner read/write, admin read
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      
+      allow create: if isAuthenticated() && 
+                      request.auth.uid == userId &&
+                      request.resource.data.keys().hasAll(['email', 'role']);
+      
+      allow update: if isAuthenticated() && 
+                      isOwner(userId) &&
+                      // Prevent users from changing their own role
+                      request.resource.data.role == resource.data.role;
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Verification requests - provider create, admin update
+    match /verifications/{verificationId} {
+      allow read: if isAuthenticated() && 
+                    (request.auth.uid == resource.data.providerId || isAdmin());
+      
+      allow create: if isAuthenticated() && 
+                      isProvider() &&
+                      request.resource.data.providerId == request.auth.uid &&
+                      request.resource.data.status == 'pending' &&
+                      request.resource.data.keys().hasAll(['providerId', 'type', 'status', 'submittedAt']);
+      
+      allow update: if isAdmin() &&
+                      request.resource.data.keys().hasAll(['status', 'reviewedBy', 'reviewedAt']);
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Medical ads - moderation checks, verified providers only
+    match /ads/{adId} {
+      // Public can only read approved ads
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      
+      // Only verified providers can create ads
+      allow create: if isAuthenticated() && 
+                      isVerifiedProvider() &&
+                      request.resource.data.providerId == request.auth.uid &&
+                      request.resource.data.status == 'pending' &&
+                      request.resource.data.keys().hasAll(['providerId', 'type', 'content', 'status']);
+      
+      // Only admins can update ads (for moderation)
+      allow update: if isAdmin() &&
+                      request.resource.data.keys().hasAll(['status']);
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Favorites subcollection under users
+    match /users/{userId}/favorites/{favoriteId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+    
+    // Search history subcollection under users
+    match /users/{userId}/searchHistory/{searchId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+  }
+}

@@ -1,0 +1,343 @@
+/**
+ * Browser Compatibility CSS
+ * Fixes and workarounds for cross-browser issues
+ */
+
+/* Browser warning banner */
+.browser-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10001;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 3px solid #ffc107;
+}
+
+/* IE11 Flexbox fixes */
+.ie-flexbox-fix .d-flex {
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ie-flexbox-fix .flex-column {
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.ie-flexbox-fix .flex-row {
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.ie-flexbox-fix .justify-content-center {
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.ie-flexbox-fix .align-items-center {
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+/* CSS Grid fallback for IE11 */
+.no-css-grid .grid-container {
+  display: block;
+}
+
+.no-css-grid .grid-item {
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+}
+
+@media (min-width: 768px) {
+  .no-css-grid .grid-item {
+    width: 48%;
+    margin-right: 2%;
+  }
+  
+  .no-css-grid .grid-item:nth-child(2n) {
+    margin-right: 0;
+  }
+}
+
+/* Safari-specific fixes */
+.browser-safari input[type="date"],
+.browser-safari input[type="time"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.browser-safari .sticky {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
+/* Firefox-specific fixes */
+.browser-firefox input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.browser-firefox input[type="number"]::-webkit-inner-spin-button,
+.browser-firefox input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Edge-specific fixes */
+.browser-edge input::-ms-clear,
+.browser-edge input::-ms-reveal {
+  display: none;
+}
+
+/* Focus-visible polyfill styles */
+.focus-visible {
+  outline: 3px solid var(--link-color, #0d6efd);
+  outline-offset: 3px;
+}
+
+:not(.focus-visible):focus {
+  outline: none;
+}
+
+/* Smooth scrolling fallback */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Object-fit fallback for IE11 */
+.no-object-fit img {
+  width: 100%;
+  height: auto;
+}
+
+/* Backdrop filter fallback */
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  [data-theme="dark"] .backdrop-blur {
+    background-color: rgba(33, 37, 41, 0.9);
+  }
+}
+
+/* CSS custom properties fallback */
+.no-css-variables {
+  /* Fallback colors */
+  --bg-primary: #ffffff;
+  --text-primary: #212529;
+  --link-color: #0d6efd;
+}
+
+.no-css-variables body {
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.no-css-variables a {
+  color: #0d6efd;
+}
+
+/* Sticky positioning fallback */
+@supports not (position: sticky) {
+  .sticky {
+    position: relative;
+  }
+}
+
+/* Gap property fallback for older browsers */
+@supports not (gap: 1rem) {
+  .flex-gap > * {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .flex-gap > *:last-child {
+    margin-right: 0;
+  }
+}
+
+/* Aspect ratio fallback */
+@supports not (aspect-ratio: 16 / 9) {
+  .aspect-ratio-16-9 {
+    position: relative;
+    padding-bottom: 56.25%; /* 9/16 = 0.5625 */
+  }
+  
+  .aspect-ratio-16-9 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Clamp fallback */
+@supports not (font-size: clamp(1rem, 2vw, 2rem)) {
+  .clamp-text {
+    font-size: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .clamp-text {
+      font-size: 2rem;
+    }
+  }
+}
+
+/* Print styles for all browsers */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* High contrast mode support (Windows) */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  button,
+  .btn {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode support for older browsers */
+@media (prefers-color-scheme: dark) {
+  .auto-dark-mode {
+    background-color: #212529;
+    color: #f8f9fa;
+  }
+}
+
+/* RTL support improvements */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .float-start {
+  float: right !important;
+}
+
+[dir="rtl"] .float-end {
+  float: left !important;
+}
+
+[dir="rtl"] .text-start {
+  text-align: right !important;
+}
+
+[dir="rtl"] .text-end {
+  text-align: left !important;
+}
+
+/* Vendor prefixes for transforms */
+.transform {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Vendor prefixes for transitions */
+.transition {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* Vendor prefixes for animations */
+@-webkit-keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@-moz-keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Input autofill styling for all browsers */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-primary, #ffffff) inset;
+  -webkit-text-fill-color: var(--text-primary, #212529);
+}
+
+input:-moz-autofill {
+  background-color: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #212529);
+}
+
+/* Scrollbar styling for WebKit browsers */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary, #f8f9fa);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color, #dee2e6);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted, #6c757d);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color, #dee2e6) var(--bg-secondary, #f8f9fa);
+}

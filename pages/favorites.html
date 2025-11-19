@@ -1,0 +1,355 @@
+<!-- Favorites Page -->
+<div class="container my-4">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2" data-i18n="favorites.title">My Favorite Providers</h1>
+    <button class="btn btn-link text-decoration-none" onclick="history.back()">
+      <i class="bi bi-arrow-left"></i>
+      <span data-i18n="favorites.back">Back</span>
+    </button>
+  </div>
+
+  <!-- Authentication Required Message -->
+  <div id="auth-required" class="alert alert-warning d-none" role="alert">
+    <h4 class="alert-heading" data-i18n="favorites.authRequired">Sign In Required</h4>
+    <p data-i18n="favorites.authMessage">You must be signed in to view your favorite providers.</p>
+    <hr>
+    <a href="/pages/auth.html" class="btn btn-primary">
+      <span data-i18n="favorites.signIn">Sign In</span>
+    </a>
+  </div>
+
+  <!-- Loading State -->
+  <div id="favorites-loading" class="text-center py-5 d-none">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <p class="mt-3" data-i18n="favorites.loading">Loading your favorites...</p>
+  </div>
+
+  <!-- Error State -->
+  <div id="favorites-error" class="alert alert-danger d-none" role="alert">
+    <h4 class="alert-heading" data-i18n="favorites.error">Error</h4>
+    <p id="favorites-error-message"></p>
+    <button class="btn btn-outline-danger" onclick="loadFavorites()">
+      <span data-i18n="favorites.retry">Try Again</span>
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div id="favorites-empty" class="text-center py-5 d-none">
+    <i class="bi bi-heart display-1 text-muted"></i>
+    <h3 class="mt-3" data-i18n="favorites.empty">No Favorites Yet</h3>
+    <p class="text-muted" data-i18n="favorites.emptyMessage">
+      Start adding providers to your favorites to see them here.
+    </p>
+    <a href="/" class="btn btn-primary mt-3">
+      <span data-i18n="favorites.browse">Browse Providers</span>
+    </a>
+  </div>
+
+  <!-- Favorites List -->
+  <div id="favorites-content" class="d-none">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <p class="text-muted mb-0">
+          <span id="favorites-count">0</span>
+          <span data-i18n="favorites.providersFound">providers found</span>
+        </p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <button class="btn btn-sm btn-outline-secondary" onclick="sortFavorites('name')">
+          <i class="bi bi-sort-alpha-down"></i>
+          <span data-i18n="favorites.sortName">Sort by Name</span>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="sortFavorites('type')">
+          <i class="bi bi-funnel"></i>
+          <span data-i18n="favorites.sortType">Sort by Type</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="favorites-list" class="row g-3">
+      <!-- Favorite provider cards will be dynamically loaded -->
+    </div>
+  </div>
+</div>
+
+<!-- Remove Confirmation Modal -->
+<div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="removeModalLabel" data-i18n="favorites.removeTitle">Remove from Favorites</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p data-i18n="favorites.removeMessage">Are you sure you want to remove this provider from your favorites?</p>
+        <p class="fw-bold mb-0" id="remove-provider-name"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="favorites.cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="confirmRemoveFavorite()" data-i18n="favorites.remove">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Favorites page functionality
+let favoriteProviders = [];
+let providerToRemove = null;
+
+// Initialize favorites page
+async function initFavoritesPage() {
+  try {
+    // Check authentication
+    const currentUser = await authModule.getCurrentUser();
+    
+    if (!currentUser) {
+      showAuthRequired();
+      return;
+    }
+
+    // Load favorites
+    await loadFavorites();
+
+  } catch (error) {
+    console.error('Error initializing favorites page:', error);
+    showError(error.message);
+  }
+}
+
+// Load favorites
+async function loadFavorites() {
+  try {
+    // Show loading state
+    hideAllStates();
+    document.getElementById('favorites-loading').classList.remove('d-none');
+
+    // Fetch favorite providers
+    favoriteProviders = await profileModule.getFavoriteProviders();
+
+    // Show appropriate state
+    if (favoriteProviders.length === 0) {
+      showEmpty();
+    } else {
+      renderFavorites(favoriteProviders);
+      showContent();
+    }
+
+  } catch (error) {
+    console.error('Error loading favorites:', error);
+    showError(error.message);
+  }
+}
+
+// Render favorites list
+function renderFavorites(providers) {
+  const favoritesList = document.getElementById('favorites-list');
+  const favoritesCount = document.getElementById('favorites-count');
+
+  favoritesCount.textContent = providers.length;
+
+  let html = '';
+
+  providers.forEach(provider => {
+    html += createProviderCard(provider);
+  });
+
+  favoritesList.innerHTML = html;
+}
+
+// Create provider card HTML
+function createProviderCard(provider) {
+  const imageUrl = provider.images && provider.images.length > 0 
+    ? provider.images[0] 
+    : '/assets/images/placeholder-provider.jpg';
+
+  const addressText = provider.address 
+    ? `${provider.address.city || ''}, ${provider.address.state || ''}`.trim()
+    : 'Address not available';
+
+  return `
+    <div class="col-md-6 col-lg-4" data-provider-id="${provider.id}">
+      <div class="card h-100 shadow-sm">
+        <div class="position-relative">
+          <img src="${imageUrl}" 
+               class="card-img-top" 
+               alt="${provider.name}"
+               style="height: 200px; object-fit: cover;">
+          ${provider.verified ? '<span class="position-absolute top-0 end-0 m-2 badge bg-success"><i class="bi bi-check-circle-fill"></i> Verified</span>' : ''}
+        </div>
+        
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="/pages/profile.html?id=${provider.id}" class="text-decoration-none text-dark">
+              ${provider.name}
+            </a>
+          </h5>
+          
+          <p class="card-text">
+            <span class="badge bg-primary mb-2">${provider.type}</span>
+            ${provider.specialty ? `<span class="badge bg-secondary mb-2">${provider.specialty}</span>` : ''}
+          </p>
+
+          <div class="mb-2">
+            ${provider.accessibility ? '<span class="badge bg-info me-1"><i class="bi bi-universal-access"></i></span>' : ''}
+            ${provider.homeVisits ? '<span class="badge bg-warning text-dark me-1"><i class="bi bi-house-door"></i></span>' : ''}
+            ${provider.available24_7 ? '<span class="badge bg-danger me-1"><i class="bi bi-exclamation-triangle-fill"></i> 24/7</span>' : ''}
+          </div>
+
+          <p class="card-text text-muted small mb-2">
+            <i class="bi bi-geo-alt"></i> ${addressText}
+          </p>
+
+          ${provider.phone ? `
+            <p class="card-text text-muted small mb-3">
+              <i class="bi bi-telephone"></i> ${Utils.formatPhone(provider.phone)}
+            </p>
+          ` : ''}
+
+          ${provider.rating ? `
+            <div class="mb-3">
+              <span class="text-warning">
+                ${generateStars(provider.rating)}
+              </span>
+              <span class="ms-1 small">${provider.rating.toFixed(1)}</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="card-footer bg-white border-top-0">
+          <div class="d-grid gap-2">
+            <a href="/pages/profile.html?id=${provider.id}" class="btn btn-primary btn-sm">
+              <i class="bi bi-eye"></i>
+              <span data-i18n="favorites.viewProfile">View Profile</span>
+            </a>
+            <button class="btn btn-outline-danger btn-sm" onclick="removeFavorite('${provider.id}', '${provider.name}')">
+              <i class="bi bi-heart-fill"></i>
+              <span data-i18n="favorites.removeFromFavorites">Remove from Favorites</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Generate star rating HTML
+function generateStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  let html = '';
+  
+  for (let i = 0; i < fullStars; i++) {
+    html += '<i class="bi bi-star-fill"></i>';
+  }
+  
+  if (hasHalfStar) {
+    html += '<i class="bi bi-star-half"></i>';
+  }
+  
+  for (let i = 0; i < emptyStars; i++) {
+    html += '<i class="bi bi-star"></i>';
+  }
+  
+  return html;
+}
+
+// Remove favorite
+function removeFavorite(providerId, providerName) {
+  providerToRemove = providerId;
+  document.getElementById('remove-provider-name').textContent = providerName;
+  
+  const modal = new bootstrap.Modal(document.getElementById('removeModal'));
+  modal.show();
+}
+
+// Confirm remove favorite
+async function confirmRemoveFavorite() {
+  try {
+    if (!providerToRemove) return;
+
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('removeModal'));
+    modal.hide();
+
+    // Remove from favorites
+    await profileModule.toggleFavorite(providerToRemove);
+
+    // Remove card from DOM
+    const card = document.querySelector(`[data-provider-id="${providerToRemove}"]`);
+    if (card) {
+      card.remove();
+    }
+
+    // Update favorites array
+    favoriteProviders = favoriteProviders.filter(p => p.id !== providerToRemove);
+
+    // Update count
+    document.getElementById('favorites-count').textContent = favoriteProviders.length;
+
+    // Show empty state if no favorites left
+    if (favoriteProviders.length === 0) {
+      showEmpty();
+    }
+
+    providerToRemove = null;
+
+  } catch (error) {
+    console.error('Error removing favorite:', error);
+    alert('Failed to remove favorite. Please try again.');
+  }
+}
+
+// Sort favorites
+function sortFavorites(sortBy) {
+  if (sortBy === 'name') {
+    favoriteProviders.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === 'type') {
+    favoriteProviders.sort((a, b) => a.type.localeCompare(b.type));
+  }
+
+  renderFavorites(favoriteProviders);
+}
+
+// Show/hide states
+function hideAllStates() {
+  document.getElementById('auth-required').classList.add('d-none');
+  document.getElementById('favorites-loading').classList.add('d-none');
+  document.getElementById('favorites-error').classList.add('d-none');
+  document.getElementById('favorites-empty').classList.add('d-none');
+  document.getElementById('favorites-content').classList.add('d-none');
+}
+
+function showAuthRequired() {
+  hideAllStates();
+  document.getElementById('auth-required').classList.remove('d-none');
+}
+
+function showContent() {
+  hideAllStates();
+  document.getElementById('favorites-content').classList.remove('d-none');
+}
+
+function showEmpty() {
+  hideAllStates();
+  document.getElementById('favorites-empty').classList.remove('d-none');
+}
+
+function showError(message) {
+  hideAllStates();
+  document.getElementById('favorites-error').classList.remove('d-none');
+  document.getElementById('favorites-error-message').textContent = message;
+}
+
+// Initialize on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initFavoritesPage);
+} else {
+  initFavoritesPage();
+}
+</script>

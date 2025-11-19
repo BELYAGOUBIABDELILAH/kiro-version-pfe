@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Component Test - CityHealth</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  
+  <style>
+    body {
+      padding: 2rem;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    
+    .test-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      background: var(--bg-secondary);
+    }
+    
+    .test-section h2 {
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .test-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4">Modal Component Test</h1>
+    
+    <div class="test-section">
+      <h2>Basic Modal Tests</h2>
+      <div class="test-buttons">
+        <button class="btn btn-primary" id="test-basic-modal">
+          <i class="bi bi-window"></i> Basic Modal
+        </button>
+        
+        <button class="btn btn-success" id="test-form-modal">
+          <i class="bi bi-pencil-square"></i> Form Modal
+        </button>
+        
+        <button class="btn btn-warning" id="test-confirmation-modal">
+          <i class="bi bi-exclamation-triangle"></i> Confirmation Modal
+        </button>
+        
+        <button class="btn btn-info" id="test-long-content-modal">
+          <i class="bi bi-file-text"></i> Long Content Modal
+        </button>
+      </div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Accessibility Tests</h2>
+      <div class="test-buttons">
+        <button class="btn btn-secondary" id="test-focus-trap">
+          <i class="bi bi-keyboard"></i> Test Focus Trap (Tab through)
+        </button>
+        
+        <button class="btn btn-secondary" id="test-escape-key">
+          <i class="bi bi-escape"></i> Test Escape Key
+        </button>
+        
+        <button class="btn btn-secondary" id="test-backdrop-click">
+          <i class="bi bi-mouse"></i> Test Backdrop Click
+        </button>
+      </div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Test Results</h2>
+      <div id="test-results" class="alert alert-info">
+        <strong>Instructions:</strong>
+        <ul class="mb-0 mt-2">
+          <li>Click buttons to open different modal types</li>
+          <li>Test keyboard navigation with Tab and Shift+Tab</li>
+          <li>Press Escape to close modal</li>
+          <li>Click backdrop (outside modal) to close</li>
+          <li>Verify focus returns to trigger button after closing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Component -->
+  <div class="modal-backdrop" id="modal-backdrop" aria-hidden="true"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Modal Title</h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close modal">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="assets/js/modal.js"></script>
+  
+  <script>
+    // Test 1: Basic Modal
+    document.getElementById('test-basic-modal').addEventListener('click', function() {
+      const modal = new Modal();
+      modal.init({
+        title: 'Basic Modal',
+        content: '<p>This is a basic modal with simple content.</p><p>You can close it by:</p><ul><li>Clicking the X button</li><li>Pressing Escape key</li><li>Clicking the backdrop</li></ul>',
+        buttons: [
+          {
+            text: 'Close',
+            className: 'btn btn-secondary',
+            closeOnClick: true
+          },
+          {
+            text: 'Confirm',
+            className: 'btn btn-primary',
+            onClick: () => {
+              alert('Confirmed!');
+            },
+            closeOnClick: true
+          }
+        ]
+      });
+    });
+    
+    // Test 2: Form Modal
+    document.getElementById('test-form-modal').addEventListener('click', function() {
+      const formContent = `
+        <form id="test-form">
+          <div class="mb-3">
+            <label for="name-input" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name-input" placeholder="Enter your name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email-input" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email-input" placeholder="Enter your email" required>
+          </div>
+          <div class="mb-3">
+            <label for="message-input" class="form-label">Message</label>
+            <textarea class="form-control" id="message-input" rows="3" placeholder="Enter your message"></textarea>
+          </div>
+        </form>
+      `;
+      
+      const modal = new Modal();
+      modal.init({
+        title: 'Contact Form',
+        content: formContent,
+        buttons: [
+          {
+            text: 'Cancel',
+            className: 'btn btn-secondary',
+            closeOnClick: true
+          },
+          {
+            text: 'Submit',
+            className: 'btn btn-success',
+            onClick: () => {
+              const form = document.getElementById('test-form');
+              if (form.checkValidity()) {
+                alert('Form submitted successfully!');
+                return true;
+              } else {
+                form.reportValidity();
+                return false;
+              }
+            },
+            closeOnClick: false
+          }
+        ]
+      });
+    });
+    
+    // Test 3: Confirmation Modal
+    document.getElementById('test-confirmation-modal').addEventListener('click', function() {
+      const modal = new Modal();
+      modal.init({
+        title: 'Confirm Action',
+        content: '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i>Are you sure you want to delete this item? This action cannot be undone.</div>',
+        buttons: [
+          {
+            text: 'Cancel',
+            className: 'btn btn-secondary',
+            closeOnClick: true
+          },
+          {
+            text: 'Delete',
+            className: 'btn btn-danger',
+            onClick: () => {
+              alert('Item deleted!');
+            },
+            closeOnClick: true
+          }
+        ]
+      });
+    });
+    
+    // Test 4: Long Content Modal
+    document.getElementById('test-long-content-modal').addEventListener('click', function() {
+      const longContent = `
+        <h4>Terms and Conditions</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h5>Section 1</h5>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <h5>Section 2</h5>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <h5>Section 3</h5>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      `;
+      
+      const modal = new Modal();
+      modal.init({
+        title: 'Long Content Modal',
+        content: longContent,
+        buttons: [
+          {
+            text: 'I Agree',
+            className: 'btn btn-primary',
+            onClick: () => {
+              alert('Thank you for agreeing!');
+            },
+            closeOnClick: true
+          }
+        ]
+      });
+    });
+    
+    // Test 5: Focus Trap Test
+    document.getElementById('test-focus-trap').addEventListener('click', function() {
+      const modal = new Modal();
+      modal.init({
+        title: 'Focus Trap Test',
+        content: '<p>Use Tab and Shift+Tab to navigate through focusable elements. Focus should stay within the modal.</p><input type="text" class="form-control mb-2" placeholder="First input"><input type="text" class="form-control mb-2" placeholder="Second input"><input type="text" class="form-control" placeholder="Third input">',
+        buttons: [
+          {
+            text: 'Button 1',
+            className: 'btn btn-secondary',
+            closeOnClick: false
+          },
+          {
+            text: 'Button 2',
+            className: 'btn btn-secondary',
+            closeOnClick: false
+          },
+          {
+            text: 'Close',
+            className: 'btn btn-primary',
+            closeOnClick: true
+          }
+        ]
+      });
+    });
+    
+    // Test 6: Escape Key Test
+    document.getElementById('test-escape-key').addEventListener('click', function() {
+      const modal = new Modal();
+      modal.init({
+        title: 'Escape Key Test',
+        content: '<p>Press the <kbd>Escape</kbd> key to close this modal.</p><p class="alert alert-info mb-0"><i class="bi bi-info-circle me-2"></i>The modal should close when you press Escape.</p>',
+        buttons: [
+          {
+            text: 'Close with Button',
+            className: 'btn btn-primary',
+            closeOnClick: true
+          }
+        ],
+        closeOnEscape: true
+      });
+    });
+    
+    // Test 7: Backdrop Click Test
+    document.getElementById('test-backdrop-click').addEventListener('click', function() {
+      const modal = new Modal();
+      modal.init({
+        title: 'Backdrop Click Test',
+        content: '<p>Click outside the modal (on the dark backdrop) to close it.</p><p class="alert alert-info mb-0"><i class="bi bi-info-circle me-2"></i>The modal should close when you click the backdrop.</p>',
+        buttons: [
+          {
+            text: 'Close with Button',
+            className: 'btn btn-primary',
+            closeOnClick: true
+          }
+        ],
+        closeOnBackdrop: true
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Provider Import - CityHealth</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    .test-container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 30px;
+    }
+    
+    .test-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+    
+    .test-result {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    
+    .test-pass {
+      background-color: #d1e7dd;
+      border: 1px solid #badbcc;
+    }
+    
+    .test-fail {
+      background-color: #f8d7da;
+      border: 1px solid #f5c2c7;
+    }
+    
+    .test-info {
+      background-color: #cff4fc;
+      border: 1px solid #b6effb;
+    }
+    
+    pre {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="test-container">
+    <h1 class="mb-4">Provider Import Test Suite</h1>
+    
+    <div class="alert alert-warning">
+      <strong>⚠️ Warning:</strong> This page tests the bulk import functionality. 
+      Make sure you're signed in as an administrator before running tests.
+    </div>
+    
+    <!-- Test 1: Authentication -->
+    <div class="test-section">
+      <h3>Test 1: Admin Authentication</h3>
+      <p>Verify that the current user is authenticated as an administrator.</p>
+      <button class="btn btn-primary" onclick="testAuthentication()">Run Test</button>
+      <div id="authResult" class="test-result" style="display: none;"></div>
+    </div>
+    
+    <!-- Test 2: CSV Parsing -->
+    <div class="test-section">
+      <h3>Test 2: CSV Parsing</h3>
+      <p>Test parsing a small CSV sample with valid data.</p>
+      <button class="btn btn-primary" onclick="testCSVParsing()">Run Test</button>
+      <div id="csvResult" class="test-result" style="display: none;"></div>
+    </div>
+    
+    <!-- Test 3: Validation -->
+    <div class="test-section">
+      <h3>Test 3: Data Validation</h3>
+      <p>Test validation of required fields and data types.</p>
+      <button class="btn btn-primary" onclick="testValidation()">Run Test</button>
+      <div id="validationResult" class="test-result" style="display: none;"></div>
+    </div>
+    
+    <!-- Test 4: Small Import -->
+    <div class="test-section">
+      <h3>Test 4: Small Import (3 providers)</h3>
+      <p>Import a small sample of 3 providers to test the full import process.</p>
+      <button class="btn btn-primary" onclick="testSmallImport()">Run Test</button>
+      <div id="importResult" class="test-result" style="display: none;"></div>
+    </div>
+    
+    <!-- Test 5: Verify Import -->
+    <div class="test-section">
+      <h3>Test 5: Verify Imported Data</h3>
+      <p>Query the database to verify imported providers exist and have correct attributes.</p>
+      <button class="btn btn-primary" onclick="testVerifyImport()">Run Test</button>
+      <div id="verifyResult" class="test-result" style="display: none;"></div>
+    </div>
+    
+    <!-- Test 6: Cleanup -->
+    <div class="test-section">
+      <h3>Test 6: Cleanup Test Data</h3>
+      <p>Remove test providers created during testing.</p>
+      <button class="btn btn-danger" onclick="testCleanup()">Run Cleanup</button>
+      <div id="cleanupResult" class="test-result" style="display: none;"></div>
+    </div>
+    
+    <!-- Run All Tests -->
+    <div class="text-center mt-4">
+      <button class="btn btn-success btn-lg" onclick="runAllTests()">
+        Run All Tests
+      </button>
+    </div>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  
+  <!-- App Scripts -->
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/admin.js"></script>
+  
+  <script>
+    let testProviderIds = [];
+    
+    // Test 1: Authentication
+    async function testAuthentication() {
+      const resultDiv = document.getElementById('authResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p>Testing...</p>';
+      
+      try {
+        const user = await authModule.getCurrentUser();
+        
+        if (!user) {
+          resultDiv.className = 'test-result test-fail';
+          resultDiv.innerHTML = '<strong>❌ FAIL:</strong> No user is signed in.';
+          return false;
+        }
+        
+        if (user.role !== 'admin') {
+          resultDiv.className = 'test-result test-fail';
+          resultDiv.innerHTML = `<strong>❌ FAIL:</strong> User role is "${user.role}", expected "admin".`;
+          return false;
+        }
+        
+        resultDiv.className = 'test-result test-pass';
+        resultDiv.innerHTML = `<strong>✅ PASS:</strong> User is authenticated as admin.<br>
+                               <small>User ID: ${user.uid}<br>Email: ${user.email}</small>`;
+        return true;
+        
+      } catch (error) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = `<strong>❌ FAIL:</strong> ${error.message}`;
+        return false;
+      }
+    }
+    
+    // Test 2: CSV Parsing
+    async function testCSVParsing() {
+      const resultDiv = document.getElementById('csvResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p>Testing...</p>';
+      
+      const sampleCSV = `name,type,phone,specialty
+Test Clinic,clinic,+213 48 54 12 34,General Medicine
+Test Hospital,hospital,+213 48 54 23 45,Emergency
+Test Doctor,doctor,+213 48 54 34 56,Cardiology`;
+      
+      try {
+        const lines = sampleCSV.trim().split('\n');
+        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+        
+        if (!headers.includes('name') || !headers.includes('type')) {
+          throw new Error('Missing required fields');
+        }
+        
+        const rowCount = lines.length - 1;
+        
+        resultDiv.className = 'test-result test-pass';
+        resultDiv.innerHTML = `<strong>✅ PASS:</strong> CSV parsed successfully.<br>
+                               <small>Headers: ${headers.join(', ')}<br>
+                               Rows: ${rowCount}</small>
+                               <pre>${sampleCSV}</pre>`;
+        return true;
+        
+      } catch (error) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = `<strong>❌ FAIL:</strong> ${error.message}`;
+        return false;
+      }
+    }
+    
+    // Test 3: Validation
+    async function testValidation() {
+      const resultDiv = document.getElementById('validationResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p>Testing...</p>';
+      
+      const validTypes = ['clinic', 'hospital', 'doctor', 'pharmacy', 'lab'];
+      const testCases = [
+        { name: 'Test Clinic', type: 'clinic', expected: true },
+        { name: 'Test Hospital', type: 'hospital', expected: true },
+        { name: '', type: 'clinic', expected: false, reason: 'Missing name' },
+        { name: 'Test', type: '', expected: false, reason: 'Missing type' },
+        { name: 'Test', type: 'invalid', expected: false, reason: 'Invalid type' }
+      ];
+      
+      let passed = 0;
+      let failed = 0;
+      let results = [];
+      
+      testCases.forEach(test => {
+        const isValid = test.name && test.type && validTypes.includes(test.type.toLowerCase());
+        
+        if (isValid === test.expected) {
+          passed++;
+          results.push(`✅ ${test.reason || 'Valid data'}: PASS`);
+        } else {
+          failed++;
+          results.push(`❌ ${test.reason || 'Valid data'}: FAIL`);
+        }
+      });
+      
+      if (failed === 0) {
+        resultDiv.className = 'test-result test-pass';
+        resultDiv.innerHTML = `<strong>✅ PASS:</strong> All validation tests passed (${passed}/${testCases.length}).<br>
+                               <pre>${results.join('\n')}</pre>`;
+        return true;
+      } else {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = `<strong>❌ FAIL:</strong> Some validation tests failed (${passed}/${testCases.length} passed).<br>
+                               <pre>${results.join('\n')}</pre>`;
+        return false;
+      }
+    }
+    
+    // Test 4: Small Import
+    async function testSmallImport() {
+      const resultDiv = document.getElementById('importResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p>Testing import...</p>';
+      
+      const testCSV = `name,type,phone,specialty,city,verified,claimed,preloaded
+Test Import Clinic 1,clinic,+213 48 54 00 01,General Medicine,Sidi Bel Abbès,true,false,true
+Test Import Hospital 1,hospital,+213 48 54 00 02,Emergency,Sidi Bel Abbès,true,false,true
+Test Import Doctor 1,doctor,+213 48 54 00 03,Cardiology,Sidi Bel Abbès,true,false,true`;
+      
+      try {
+        const results = await adminModule.bulkImportProviders(testCSV);
+        
+        // Store IDs for cleanup
+        if (results.imported) {
+          testProviderIds = results.imported.map(p => p.id);
+        }
+        
+        if (results.success === 3 && results.errors.length === 0) {
+          resultDiv.className = 'test-result test-pass';
+          resultDiv.innerHTML = `<strong>✅ PASS:</strong> Successfully imported ${results.success} providers.<br>
+                                 <small>Provider IDs: ${testProviderIds.join(', ')}</small>`;
+          return true;
+        } else {
+          resultDiv.className = 'test-result test-fail';
+          resultDiv.innerHTML = `<strong>❌ FAIL:</strong> Import completed with errors.<br>
+                                 Success: ${results.success}, Errors: ${results.errors.length}<br>
+                                 <pre>${JSON.stringify(results.errors, null, 2)}</pre>`;
+          return false;
+        }
+        
+      } catch (error) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = `<strong>❌ FAIL:</strong> ${error.message}`;
+        return false;
+      }
+    }
+    
+    // Test 5: Verify Import
+    async function testVerifyImport() {
+      const resultDiv = document.getElementById('verifyResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p>Verifying...</p>';
+      
+      if (testProviderIds.length === 0) {
+        resultDiv.className = 'test-result test-info';
+        resultDiv.innerHTML = '<strong>ℹ️ INFO:</strong> No test providers to verify. Run Test 4 first.';
+        return false;
+      }
+      
+      try {
+        const checks = [];
+        
+        for (const id of testProviderIds) {
+          const doc = await db.collection('providers').doc(id).get();
+          
+          if (!doc.exists) {
+            checks.push(`❌ Provider ${id} not found`);
+            continue;
+          }
+          
+          const data = doc.data();
+          
+          // Check required attributes
+          if (data.verified !== true) {
+            checks.push(`❌ Provider ${id}: verified is not true`);
+          } else if (data.claimed !== false) {
+            checks.push(`❌ Provider ${id}: claimed is not false`);
+          } else if (data.preloaded !== true) {
+            checks.push(`❌ Provider ${id}: preloaded is not true`);
+          } else {
+            checks.push(`✅ Provider ${id}: All attributes correct`);
+          }
+        }
+        
+        const allPassed = checks.every(c => c.startsWith('✅'));
+        
+        if (allPassed) {
+          resultDiv.className = 'test-result test-pass';
+          resultDiv.innerHTML = `<strong>✅ PASS:</strong> All imported providers verified correctly.<br>
+                                 <pre>${checks.join('\n')}</pre>`;
+          return true;
+        } else {
+          resultDiv.className = 'test-result test-fail';
+          resultDiv.innerHTML = `<strong>❌ FAIL:</strong> Some providers have incorrect attributes.<br>
+                                 <pre>${checks.join('\n')}</pre>`;
+          return false;
+        }
+        
+      } catch (error) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = `<strong>❌ FAIL:</strong> ${error.message}`;
+        return false;
+      }
+    }
+    
+    // Test 6: Cleanup
+    async function testCleanup() {
+      const resultDiv = document.getElementById('cleanupResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p>Cleaning up...</p>';
+      
+      if (testProviderIds.length === 0) {
+        resultDiv.className = 'test-result test-info';
+        resultDiv.innerHTML = '<strong>ℹ️ INFO:</strong> No test providers to clean up.';
+        return true;
+      }
+      
+      try {
+        const results = await adminModule.batchDeleteProviders(testProviderIds);
+        
+        if (results.success === testProviderIds.length) {
+          resultDiv.className = 'test-result test-pass';
+          resultDiv.innerHTML = `<strong>✅ PASS:</strong> Successfully deleted ${results.success} test providers.`;
+          testProviderIds = [];
+          return true;
+        } else {
+          resultDiv.className = 'test-result test-fail';
+          resultDiv.innerHTML = `<strong>❌ FAIL:</strong> Some providers failed to delete.<br>
+                                 Success: ${results.success}, Errors: ${results.errors.length}`;
+          return false;
+        }
+        
+      } catch (error) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = `<strong>❌ FAIL:</strong> ${error.message}`;
+        return false;
+      }
+    }
+    
+    // Run all tests
+    async function runAllTests() {
+      console.log('Running all tests...');
+      
+      const test1 = await testAuthentication();
+      if (!test1) return;
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const test2 = await testCSVParsing();
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const test3 = await testValidation();
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const test4 = await testSmallImport();
+      
+      if (test4) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const test5 = await testVerifyImport();
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await testCleanup();
+      }
+      
+      alert('All tests completed! Review results above.');
+    }
+  </script>
+</body>
+</html>

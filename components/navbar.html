@@ -1,0 +1,126 @@
+<!-- Navigation Bar Component -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <!-- Logo and Brand -->
+    <a class="navbar-brand" href="/" data-route aria-label="CityHealth home">
+      <i class="bi bi-heart-pulse-fill text-primary" aria-hidden="true"></i>
+      <span class="fw-bold">CityHealth</span>
+    </a>
+    
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Navigation Items -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center" role="menubar">
+        <!-- Main Navigation Links -->
+        <li class="nav-item" role="none">
+          <a class="nav-link" href="/" data-route role="menuitem" data-i18n="nav.home">Home</a>
+        </li>
+        <li class="nav-item" role="none">
+          <a class="nav-link" href="/search" data-route role="menuitem" data-i18n="nav.search">Search</a>
+        </li>
+        <li class="nav-item" role="none">
+          <a class="nav-link" href="/emergency" data-route role="menuitem" data-i18n="nav.emergency">Emergency</a>
+        </li>
+        
+        <!-- Language Selector Dropdown -->
+        <li class="nav-item dropdown" role="none">
+          <button class="btn btn-link nav-link dropdown-toggle" type="button" id="languageDropdown" 
+                  data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
+            <i class="bi bi-translate" aria-hidden="true"></i>
+            <span id="current-language-label">English</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+            <li>
+              <button class="dropdown-item language-option" data-lang="en" type="button">
+                <i class="bi bi-check language-check d-none" aria-hidden="true"></i>
+                English
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item language-option" data-lang="ar" type="button">
+                <i class="bi bi-check language-check d-none" aria-hidden="true"></i>
+                العربية
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item language-option" data-lang="fr" type="button">
+                <i class="bi bi-check language-check d-none" aria-hidden="true"></i>
+                Français
+              </button>
+            </li>
+          </ul>
+        </li>
+        
+        <!-- Theme Toggle Button -->
+        <li class="nav-item" role="none">
+          <button class="btn btn-link nav-link theme-toggle" id="theme-toggle" 
+                  aria-label="Switch to dark mode" title="Toggle theme">
+            <i class="bi bi-moon-fill theme-icon" aria-hidden="true"></i>
+          </button>
+        </li>
+        
+        <!-- Authentication Buttons (Not Logged In) -->
+        <li class="nav-item auth-item" data-auth-state="logged-out" role="none">
+          <a class="nav-link" href="/auth" data-route role="menuitem" aria-label="Login to your account">
+            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+            <span data-i18n="nav.login">Login</span>
+          </a>
+        </li>
+        <li class="nav-item auth-item" data-auth-state="logged-out" role="none">
+          <a class="btn btn-primary btn-sm ms-2" href="/auth" data-route role="menuitem" aria-label="Register new account">
+            <span data-i18n="nav.register">Register</span>
+          </a>
+        </li>
+        
+        <!-- User Profile Dropdown (Logged In) -->
+        <li class="nav-item dropdown auth-item d-none" data-auth-state="logged-in" role="none">
+          <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" type="button" 
+                  id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User menu">
+            <img id="user-avatar" src="" alt="" class="rounded-circle me-2" width="32" height="32" style="display: none;">
+            <i class="bi bi-person-circle user-icon-placeholder" aria-hidden="true" style="font-size: 1.5rem;"></i>
+            <span id="user-display-name" class="ms-2">User</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <!-- Role-specific menu items will be added dynamically -->
+            <li class="role-menu-item" data-role="citizen">
+              <a class="dropdown-item" href="/favorites" data-route>
+                <i class="bi bi-heart-fill" aria-hidden="true"></i>
+                <span data-i18n="nav.favorites">Favorites</span>
+              </a>
+            </li>
+            <li class="role-menu-item" data-role="citizen">
+              <a class="dropdown-item" href="/profile" data-route>
+                <i class="bi bi-person" aria-hidden="true"></i>
+                <span data-i18n="nav.profile">Profile</span>
+              </a>
+            </li>
+            <li class="role-menu-item" data-role="provider">
+              <a class="dropdown-item" href="/provider-dashboard" data-route>
+                <i class="bi bi-speedometer2" aria-hidden="true"></i>
+                <span data-i18n="nav.dashboard">Dashboard</span>
+              </a>
+            </li>
+            <li class="role-menu-item" data-role="admin">
+              <a class="dropdown-item" href="/admin-dashboard" data-route>
+                <i class="bi bi-shield-check" aria-hidden="true"></i>
+                <span data-i18n="nav.adminDashboard">Admin Dashboard</span>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <button class="dropdown-item" id="logout-btn" type="button">
+                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                <span data-i18n="nav.logout">Logout</span>
+              </button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

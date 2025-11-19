@@ -1,0 +1,148 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "search": "Rechercher",
+    "emergency": "Urgence",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion"
+  },
+  "search": {
+    "query": "Rechercher",
+    "queryPlaceholder": "Rechercher des prestataires de soins de santé...",
+    "serviceType": "Type de service",
+    "location": "Emplacement",
+    "searchButton": "Rechercher",
+    "allTypes": "Tous les types",
+    "allLocations": "Tous les emplacements",
+    "clinic": "Clinique",
+    "hospital": "Hôpital",
+    "doctor": "Médecin",
+    "pharmacy": "Pharmacie",
+    "lab": "Laboratoire",
+    "noResults": "Aucun résultat trouvé. Essayez d'autres termes de recherche.",
+    "resultsCount": "résultats trouvés",
+    "filters": "Filtres",
+    "accessibility": "Accessible en fauteuil roulant",
+    "homeVisits": "Visites à domicile",
+    "emergency247": "Urgence 24/7",
+    "clearFilters": "Effacer les filtres",
+    "applyFilters": "Appliquer les filtres"
+  },
+  "profile": {
+    "contact": "Coordonnées",
+    "hours": "Heures d'ouverture",
+    "location": "Emplacement",
+    "photos": "Photos",
+    "verified": "Vérifié",
+    "accessible": "Accessible en fauteuil roulant",
+    "homeVisits": "Visites à domicile disponibles",
+    "emergency": "Urgence 24/7"
+  },
+  "provider": {
+    "accessible": "Accessible",
+    "homeVisits": "Visites à domicile",
+    "emergency": "24/7",
+    "viewProfile": "Voir le profil",
+    "favorite": "Favori",
+    "addToFavorites": "Ajouter aux favoris",
+    "removeFromFavorites": "Retirer des favoris",
+    "verified": "Fournisseur vérifié",
+    "rating": "Évaluation",
+    "outOf5": "sur 5 étoiles",
+    "type": {
+      "clinic": "Clinique",
+      "hospital": "Hôpital",
+      "doctor": "Médecin",
+      "pharmacy": "Pharmacie",
+      "lab": "Laboratoire"
+    }
+  },
+  "suggestions": {
+    "title": "Suggéré pour vous",
+    "subtitle": "Basé sur votre activité et vos préférences",
+    "view": "Voir le profil",
+    "dismiss": "Ignorer"
+  },
+  "home": {
+    "welcome": "Bienvenue sur CityHealth",
+    "subtitle": "Trouvez des prestataires de soins de santé de confiance à Sidi Bel Abbès",
+    "featuredProviders": "Prestataires de soins de santé en vedette",
+    "viewAllProviders": "Voir tous les prestataires",
+    "noFeaturedProviders": "Aucun prestataire en vedette disponible pour le moment."
+  },
+  "ads": {
+    "featuredAds": "Services médicaux en vedette"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "retry": "Réessayer"
+  },
+  "error": {
+    "network": "Erreur réseau. Veuillez vérifier votre connexion et réessayer.",
+    "auth": "Erreur d'authentification. Veuillez vous reconnecter.",
+    "permission": "Vous n'avez pas la permission d'effectuer cette action.",
+    "validation": "Veuillez vérifier votre saisie et réessayer.",
+    "not_found": "La ressource demandée n'a pas été trouvée.",
+    "server": "Erreur du serveur. Veuillez réessayer plus tard.",
+    "unknown": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "offline": "Vous êtes actuellement hors ligne. Certaines fonctionnalités peuvent ne pas être disponibles.",
+    "back_online": "Vous êtes de nouveau en ligne.",
+    "email_in_use": "Cet email est déjà utilisé.",
+    "invalid_email": "Veuillez entrer une adresse email valide.",
+    "user_not_found": "Utilisateur non trouvé.",
+    "wrong_password": "Mot de passe incorrect.",
+    "weak_password": "Le mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort.",
+    "too_many_requests": "Trop de tentatives. Veuillez réessayer plus tard.",
+    "already_exists": "Cette ressource existe déjà.",
+    "quota_exceeded": "Quota dépassé. Veuillez réessayer plus tard.",
+    "service_unavailable": "Service temporairement indisponible. Veuillez réessayer.",
+    "upload_canceled": "Le téléchargement a été annulé.",
+    "upload_failed": "Le téléchargement a échoué. Veuillez réessayer."
+  },
+  "chatbot": {
+    "title": "Assistant CityHealth",
+    "status": "En ligne",
+    "toggle": "Ouvrir le chatbot",
+    "close": "Fermer le chatbot",
+    "typing": "En train d'écrire...",
+    "input": {
+      "placeholder": "Tapez votre message...",
+      "label": "Saisie de message de chat"
+    },
+    "send": "Envoyer le message"
+  },
+  "emergency": {
+    "title": "Services d'urgence - 24/7",
+    "subtitle": "Prestataires de soins de santé disponibles 24h/24",
+    "loadingMessage": "Chargement des prestataires d'urgence...",
+    "error": "Impossible de charger les prestataires d'urgence. Veuillez réessayer.",
+    "noProviders": "Aucun prestataire d'urgence disponible pour le moment.",
+    "available247": "Disponible 24/7",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "callNow": "Appeler maintenant",
+    "viewProfile": "Voir le profil",
+    "viewAll": "Voir tous les services d'urgence",
+    "sectionTitle": "Services d'urgence"
+  },
+  "footer": {
+    "description": "Votre répertoire de soins de santé de confiance pour Sidi Bel Abbès, Algérie",
+    "quickLinks": "Liens rapides",
+    "searchProviders": "Rechercher des prestataires",
+    "emergencyServices": "Services d'urgence",
+    "forProviders": "Pour les prestataires",
+    "contact": "Contact",
+    "language": "Langue",
+    "rights": "Tous droits réservés.",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
+  }
+}

@@ -1,0 +1,45 @@
+<!-- Home Page -->
+<!-- Hero Section with Search Bar -->
+<section class="hero-section" aria-labelledby="hero-heading">
+  <div class="container">
+    <div class="hero-content text-center py-5">
+      <h1 id="hero-heading" class="hero-title mb-3" data-i18n="home.welcome">Welcome to CityHealth</h1>
+      <p class="hero-subtitle lead mb-4" data-i18n="home.subtitle">Find trusted healthcare providers in Sidi Bel Abbès</p>
+      
+      <!-- Search bar integrated in hero -->
+      <div class="hero-search-container" id="search-bar-container"></div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Emergency Now Section -->
+  <section class="emergency-section py-4" aria-labelledby="emergency-heading">
+    <div id="emergency-section"></div>
+  </section>
+  
+  <!-- Medical Ads Carousel -->
+  <section class="medical-ads-section py-4" id="medical-ads-section" style="display: none;" aria-labelledby="ads-heading">
+    <h2 id="ads-heading" class="section-title mb-4" data-i18n="ads.featuredAds">Featured Medical Services</h2>
+    <div id="medical-ads-carousel-content" role="region" aria-label="Medical advertisements carousel">
+      <!-- Ads will be loaded dynamically -->
+    </div>
+  </section>
+  
+  <!-- Featured Providers Section -->
+  <section class="featured-providers-section py-4" aria-labelledby="featured-heading">
+    <h2 id="featured-heading" class="section-title mb-4" data-i18n="home.featuredProviders">Featured Healthcare Providers</h2>
+    <div id="featured-providers" class="row g-4">
+      <!-- Featured providers will be loaded dynamically -->
+    </div>
+    <div class="text-center mt-4">
+      <a href="/search" data-route class="btn btn-outline-primary" data-i18n="home.viewAllProviders">View All Providers</a>
+    </div>
+  </section>
+  
+  <!-- Smart Suggestions Section -->
+  <section class="suggestions-section py-4" aria-labelledby="suggestions-heading">
+    <div id="suggestions-container"></div>
+  </section>
+</div>
+

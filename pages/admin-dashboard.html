@@ -1,0 +1,1525 @@
+<!-- Admin Dashboard Page -->
+<div class="container py-4">
+  <h1 class="mb-4" data-i18n="admin.title">Admin Dashboard</h1>
+
+  <!-- Dashboard Statistics -->
+  <div class="row mb-4">
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-hospital text-primary" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.totalProviders">Total Providers</h5>
+          <h2 id="stat-total-providers" class="text-primary">-</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.verifiedProviders">Verified</h5>
+          <h2 id="stat-verified-providers" class="text-success">-</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-clock-history text-warning" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.pendingVerifications">Pending</h5>
+          <h2 id="stat-pending-verifications" class="text-warning">-</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-person-check text-info" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.claimedProfiles">Claimed</h5>
+          <h2 id="stat-claimed-profiles" class="text-info">-</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-people text-secondary" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.activeUsers">Active Users</h5>
+          <h2 id="stat-active-users" class="text-secondary">-</h2>
+          <small class="text-muted" data-i18n="admin.last30Days">(Last 30 days)</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-chat-dots text-primary" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.chatbotSessions">Chatbot Sessions</h5>
+          <h2 id="stat-chatbot-sessions" class="text-primary">-</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-chat-text text-success" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.chatbotMessages">Chatbot Messages</h5>
+          <h2 id="stat-chatbot-messages" class="text-success">-</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="bi bi-people-fill text-dark" style="font-size: 2rem;"></i>
+          <h5 class="card-title mt-2" data-i18n="admin.totalUsers">Total Users</h5>
+          <h2 id="stat-total-users" class="text-dark">-</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Queue -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0" data-i18n="admin.verificationQueue">Verification Queue</h5>
+      <button class="btn btn-sm btn-primary" onclick="refreshVerificationQueue()">
+        <i class="bi bi-arrow-clockwise"></i>
+        <span data-i18n="common.refresh">Refresh</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <div id="verification-queue-content">
+        <p class="text-muted" data-i18n="admin.loadingQueue">Loading verification queue...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ad Moderation -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0" data-i18n="admin.adModeration">Ad Moderation</h5>
+      <button class="btn btn-sm btn-primary" onclick="refreshAdModeration()">
+        <i class="bi bi-arrow-clockwise"></i>
+        <span data-i18n="common.refresh">Refresh</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <div id="ad-moderation-content">
+        <p class="text-muted" data-i18n="admin.loadingAds">Loading pending ads...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Provider Management -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0" data-i18n="admin.providerManagement">Provider Management</h5>
+      <div>
+        <button class="btn btn-sm btn-info me-2" onclick="showBulkImportModal()">
+          <i class="bi bi-upload"></i>
+          <span data-i18n="admin.bulkImport">Bulk Import</span>
+        </button>
+        <button class="btn btn-sm btn-success" onclick="showCreateProviderModal()">
+          <i class="bi bi-plus-circle"></i>
+          <span data-i18n="admin.createProvider">Create Provider</span>
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- Search and Filters -->
+      <div class="row mb-3">
+        <div class="col-md-4 mb-2">
+          <input type="text" class="form-control" id="provider-search" placeholder="Search by name..." data-i18n-placeholder="admin.searchProviders">
+        </div>
+        <div class="col-md-2 mb-2">
+          <select class="form-select" id="filter-type">
+            <option value="" data-i18n="admin.allTypes">All Types</option>
+            <option value="clinic">Clinic</option>
+            <option value="hospital">Hospital</option>
+            <option value="doctor">Doctor</option>
+            <option value="pharmacy">Pharmacy</option>
+            <option value="lab">Lab</option>
+          </select>
+        </div>
+        <div class="col-md-2 mb-2">
+          <select class="form-select" id="filter-verified">
+            <option value="" data-i18n="admin.allStatus">All Status</option>
+            <option value="true" data-i18n="admin.verified">Verified</option>
+            <option value="false" data-i18n="admin.unverified">Unverified</option>
+          </select>
+        </div>
+        <div class="col-md-2 mb-2">
+          <select class="form-select" id="filter-claimed">
+            <option value="" data-i18n="admin.allClaimed">All</option>
+            <option value="true" data-i18n="admin.claimed">Claimed</option>
+            <option value="false" data-i18n="admin.unclaimed">Unclaimed</option>
+          </select>
+        </div>
+        <div class="col-md-2 mb-2">
+          <button class="btn btn-primary w-100" onclick="loadProviders()">
+            <i class="bi bi-search"></i>
+            <span data-i18n="common.search">Search</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Provider List -->
+      <div id="provider-list-content">
+        <p class="text-muted" data-i18n="admin.loadingProviders">Loading providers...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Data Management -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0" data-i18n="admin.systemData">System Data Management</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <!-- Account Types -->
+        <div class="col-md-4 mb-3">
+          <h6 data-i18n="admin.accountTypes">Account Types</h6>
+          <div id="account-types-list" class="mb-2">
+            <p class="text-muted" data-i18n="admin.loading">Loading...</p>
+          </div>
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control" id="new-account-type" placeholder="New type..." data-i18n-placeholder="admin.newType">
+            <button class="btn btn-outline-primary" onclick="addNewAccountType()">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Specialties -->
+        <div class="col-md-4 mb-3">
+          <h6 data-i18n="admin.specialties">Specialties</h6>
+          <div id="specialties-list" class="mb-2">
+            <p class="text-muted" data-i18n="admin.loading">Loading...</p>
+          </div>
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control" id="new-specialty" placeholder="New specialty..." data-i18n-placeholder="admin.newSpecialty">
+            <button class="btn btn-outline-primary" onclick="addNewSpecialty()">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Service Categories -->
+        <div class="col-md-4 mb-3">
+          <h6 data-i18n="admin.serviceCategories">Service Categories</h6>
+          <div id="categories-list" class="mb-2">
+            <p class="text-muted" data-i18n="admin.loading">Loading...</p>
+          </div>
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control" id="new-category" placeholder="New category..." data-i18n-placeholder="admin.newCategory">
+            <button class="btn btn-outline-primary" onclick="addNewCategory()">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ad Review Modal -->
+<div class="modal fade" id="adReviewModal" tabindex="-1" aria-labelledby="adReviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adReviewModalLabel" data-i18n="admin.reviewAd">Review Medical Ad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="ad-review-content">
+          <!-- Content will be loaded dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.close">Close</button>
+        <button type="button" class="btn btn-danger" id="reject-ad-btn" data-i18n="admin.reject">Reject</button>
+        <button type="button" class="btn btn-success" id="approve-ad-btn" data-i18n="admin.approve">Approve</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ad Rejection Reason Modal -->
+<div class="modal fade" id="adRejectionModal" tabindex="-1" aria-labelledby="adRejectionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adRejectionModalLabel" data-i18n="admin.rejectionReason">Reason for Rejection</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="ad-rejection-form">
+          <div class="mb-3">
+            <label for="ad-rejection-text" class="form-label" data-i18n="admin.enterReason">Please provide a reason for
+              rejection:</label>
+            <textarea class="form-control" id="ad-rejection-text" rows="4" required></textarea>
+          </div>
+          <div id="ad-rejection-error" class="alert alert-danger d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="submit-ad-rejection-btn"
+          data-i18n="admin.submitRejection">Submit Rejection</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Verification Review Modal -->
+<div class="modal fade" id="verificationReviewModal" tabindex="-1" aria-labelledby="verificationReviewModalLabel"
+  aria-hidden="true"></div>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="verificationReviewModalLabel" data-i18n="admin.reviewVerification">Review Verification
+        Request</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div id="verification-review-content">
+        <!-- Content will be loaded dynamically -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.close">Close</button>
+      <button type="button" class="btn btn-danger" id="deny-verification-btn" data-i18n="admin.deny">Deny</button>
+      <button type="button" class="btn btn-success" id="approve-verification-btn"
+        data-i18n="admin.approve">Approve</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Denial Reason Modal -->
+<div class="modal fade" id="denialReasonModal" tabindex="-1" aria-labelledby="denialReasonModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="denialReasonModalLabel" data-i18n="admin.denialReason">Reason for Denial</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="denial-reason-form">
+          <div class="mb-3">
+            <label for="denial-reason-text" class="form-label" data-i18n="admin.enterReason">Please provide a reason for
+              denial:</label>
+            <textarea class="form-control" id="denial-reason-text" rows="4" required></textarea>
+          </div>
+          <div id="denial-error" class="alert alert-danger d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="submit-denial-btn" data-i18n="admin.submitDenial">Submit
+          Denial</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Provider Modal -->
+<div class="modal fade" id="editProviderModal" tabindex="-1" aria-labelledby="editProviderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProviderModalLabel" data-i18n="admin.editProvider">Edit Provider</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-provider-form">
+          <input type="hidden" id="edit-provider-id">
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="edit-provider-name" class="form-label" data-i18n="profile.name">Name *</label>
+              <input type="text" class="form-control" id="edit-provider-name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="edit-provider-type" class="form-label" data-i18n="profile.type">Type *</label>
+              <select class="form-select" id="edit-provider-type" required>
+                <option value="clinic">Clinic</option>
+                <option value="hospital">Hospital</option>
+                <option value="doctor">Doctor</option>
+                <option value="pharmacy">Pharmacy</option>
+                <option value="lab">Lab</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="edit-provider-phone" class="form-label" data-i18n="profile.phone">Phone</label>
+              <input type="tel" class="form-control" id="edit-provider-phone">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="edit-provider-specialty" class="form-label" data-i18n="profile.specialty">Specialty</label>
+              <input type="text" class="form-control" id="edit-provider-specialty">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="edit-provider-address" class="form-label" data-i18n="profile.address">Address</label>
+            <input type="text" class="form-control" id="edit-provider-address">
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="edit-provider-verified">
+                <label class="form-check-label" for="edit-provider-verified" data-i18n="admin.verified">
+                  Verified
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="edit-provider-accessibility">
+                <label class="form-check-label" for="edit-provider-accessibility" data-i18n="profile.accessibility">
+                  Wheelchair Accessible
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="edit-provider-homevisits">
+                <label class="form-check-label" for="edit-provider-homevisits" data-i18n="profile.homeVisits">
+                  Home Visits
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="edit-provider-error" class="alert alert-danger d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="save-provider-btn" data-i18n="common.save">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteProviderModal" tabindex="-1" aria-labelledby="deleteProviderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteProviderModalLabel" data-i18n="admin.deleteProvider">Delete Provider</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p data-i18n="admin.deleteConfirmation">Are you sure you want to delete this provider? This action cannot be undone.</p>
+        <p><strong id="delete-provider-name"></strong></p>
+        <input type="hidden" id="delete-provider-id">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-btn" data-i18n="admin.delete">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Import Modal -->
+<div class="modal fade" id="bulkImportModal" tabindex="-1" aria-labelledby="bulkImportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkImportModalLabel" data-i18n="admin.bulkImport">Bulk Import Providers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info" role="alert">
+          <h6 data-i18n="admin.csvFormat">CSV Format Requirements:</h6>
+          <ul>
+            <li data-i18n="admin.csvRequired">Required fields: name, type</li>
+            <li data-i18n="admin.csvOptional">Optional fields: phone, specialty, address, city, wilaya, latitude, longitude, accessibility, homevisits, available24_7</li>
+            <li data-i18n="admin.csvTypes">Valid types: clinic, hospital, doctor, pharmacy, lab</li>
+          </ul>
+          <p class="mb-0"><strong data-i18n="admin.csvExample">Example:</strong></p>
+          <code>name,type,phone,specialty,address,city<br>
+          Dr. Ahmed Clinic,clinic,+213555123456,General Medicine,123 Main St,Sidi Bel Abbès</code>
+        </div>
+
+        <div class="mb-3">
+          <label for="csv-file-input" class="form-label" data-i18n="admin.selectCsv">Select CSV File</label>
+          <input type="file" class="form-control" id="csv-file-input" accept=".csv">
+        </div>
+
+        <div id="import-progress" class="d-none">
+          <div class="progress mb-3">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+          </div>
+          <p class="text-center" data-i18n="admin.importing">Importing providers...</p>
+        </div>
+
+        <div id="import-results" class="d-none">
+          <div class="alert alert-success" role="alert">
+            <h6 data-i18n="admin.importComplete">Import Complete!</h6>
+            <p class="mb-0">
+              <strong data-i18n="admin.successCount">Successful:</strong> <span id="import-success-count">0</span><br>
+              <strong data-i18n="admin.errorCount">Errors:</strong> <span id="import-error-count">0</span>
+            </p>
+          </div>
+          <div id="import-errors-list" class="d-none">
+            <h6 data-i18n="admin.importErrors">Import Errors:</h6>
+            <div class="list-group" id="import-errors-content"></div>
+          </div>
+        </div>
+
+        <div id="import-error" class="alert alert-danger d-none" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="start-import-btn" data-i18n="admin.startImport">Start Import</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Admin Dashboard Logic
+  (async function () {
+    // Check authentication
+    const user = await authModule.getCurrentUser();
+
+    if (!user || user.role !== 'admin') {
+      window.location.hash = '#/auth';
+      return;
+    }
+
+    let currentVerificationId = null;
+    let currentProviderId = null;
+
+    // Load dashboard statistics
+    async function loadDashboardStats() {
+      try {
+        const stats = await adminModule.getDashboardStats();
+
+        document.getElementById('stat-total-providers').textContent = stats.totalProviders;
+        document.getElementById('stat-verified-providers').textContent = stats.verifiedProviders;
+        document.getElementById('stat-pending-verifications').textContent = stats.pendingVerifications;
+        document.getElementById('stat-claimed-profiles').textContent = stats.claimedProfiles;
+        document.getElementById('stat-active-users').textContent = stats.activeUsers || 0;
+        document.getElementById('stat-chatbot-sessions').textContent = stats.chatbotSessions || 0;
+        document.getElementById('stat-chatbot-messages').textContent = stats.chatbotMessages || 0;
+        document.getElementById('stat-total-users').textContent = stats.totalUsers || 0;
+
+      } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+      }
+    }
+
+    // Load verification queue
+    async function loadVerificationQueue() {
+      try {
+        const queueContent = document.getElementById('verification-queue-content');
+        queueContent.innerHTML = '<p class="text-muted" data-i18n="admin.loadingQueue">Loading verification queue...</p>';
+
+        const queue = await adminModule.getVerificationQueue();
+
+        if (queue.length === 0) {
+          queueContent.innerHTML = `
+          <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <span data-i18n="admin.noVerifications">No pending verification requests.</span>
+          </div>
+        `;
+          return;
+        }
+
+        let html = '<div class="list-group">';
+
+        queue.forEach(request => {
+          const providerName = request.providerDetails?.name || 'Unknown Provider';
+          const providerType = request.providerDetails?.type || 'N/A';
+          const requestType = request.type === 'claim' ? 'Profile Claim' : 'New Verification';
+          const submittedDate = request.submittedAt ? new Date(request.submittedAt.toDate()).toLocaleDateString() : 'N/A';
+
+          html += `
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h6 class="mb-1">
+                  ${providerName}
+                  <span class="badge bg-${request.type === 'claim' ? 'info' : 'primary'} ms-2">${requestType}</span>
+                </h6>
+                <p class="mb-1">
+                  <strong data-i18n="profile.type">Type:</strong> ${providerType}<br>
+                  <strong data-i18n="admin.submitted">Submitted:</strong> ${submittedDate}<br>
+                  <strong data-i18n="admin.documents">Documents:</strong> ${request.documents?.length || 0} file(s)
+                </p>
+              </div>
+              <button class="btn btn-sm btn-outline-primary" onclick="reviewVerification('${request.id}', '${request.providerId}')">
+                <i class="bi bi-eye"></i>
+                <span data-i18n="admin.review">Review</span>
+              </button>
+            </div>
+          </div>
+        `;
+        });
+
+        html += '</div>';
+        queueContent.innerHTML = html;
+
+      } catch (error) {
+        console.error('Error loading verification queue:', error);
+        document.getElementById('verification-queue-content').innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          <span data-i18n="error.loadingQueue">Error loading verification queue. Please try again.</span>
+        </div>
+      `;
+      }
+    }
+
+    // Review verification request
+    window.reviewVerification = async function (verificationId, providerId) {
+      try {
+        currentVerificationId = verificationId;
+        currentProviderId = providerId;
+
+        // Get verification details
+        const verificationDoc = await db.collection('verifications').doc(verificationId).get();
+        const verificationData = verificationDoc.data();
+
+        // Get provider details
+        const providerDoc = await db.collection('providers').doc(providerId).get();
+        const providerData = providerDoc.data();
+
+        // Build review content
+        let html = `
+        <div class="mb-4">
+          <h6 data-i18n="admin.providerDetails">Provider Details</h6>
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <th data-i18n="profile.name">Name:</th>
+                <td>${providerData?.name || 'N/A'}</td>
+              </tr>
+              <tr>
+                <th data-i18n="profile.type">Type:</th>
+                <td>${providerData?.type || 'N/A'}</td>
+              </tr>
+              <tr>
+                <th data-i18n="profile.phone">Phone:</th>
+                <td>${providerData?.phone || 'N/A'}</td>
+              </tr>
+              <tr>
+                <th data-i18n="profile.address">Address:</th>
+                <td>${providerData?.address?.street || 'N/A'}, ${providerData?.address?.city || ''}</td>
+              </tr>
+              <tr>
+                <th data-i18n="admin.requestType">Request Type:</th>
+                <td>
+                  <span class="badge bg-${verificationData.type === 'claim' ? 'info' : 'primary'}">
+                    ${verificationData.type === 'claim' ? 'Profile Claim' : 'New Verification'}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="mb-4">
+          <h6 data-i18n="admin.submittedDocuments">Submitted Documents</h6>
+      `;
+
+        if (verificationData.documents && verificationData.documents.length > 0) {
+          html += '<div class="row">';
+          verificationData.documents.forEach((docUrl, index) => {
+            const isPdf = docUrl.toLowerCase().includes('.pdf');
+            html += `
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  ${isPdf ?
+                '<i class="bi bi-file-pdf" style="font-size: 3rem;"></i>' :
+                `<img src="${docUrl}" class="img-fluid" alt="Document ${index + 1}" style="max-height: 200px;">`
+              }
+                  <div class="mt-2">
+                    <a href="${docUrl}" target="_blank" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-download"></i>
+                      <span data-i18n="admin.view">View</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          });
+          html += '</div>';
+        } else {
+          html += '<p class="text-muted" data-i18n="admin.noDocuments">No documents submitted.</p>';
+        }
+
+        html += '</div>';
+
+        document.getElementById('verification-review-content').innerHTML = html;
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('verificationReviewModal'));
+        modal.show();
+
+      } catch (error) {
+        console.error('Error loading verification details:', error);
+        alert('Error loading verification details. Please try again.');
+      }
+    };
+
+    // Approve verification
+    document.getElementById('approve-verification-btn').addEventListener('click', async function () {
+      if (!currentVerificationId || !currentProviderId) {
+        return;
+      }
+
+      if (!confirm('Are you sure you want to approve this verification request?')) {
+        return;
+      }
+
+      try {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Approving...';
+
+        await adminModule.approveVerification(currentVerificationId, currentProviderId);
+
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('verificationReviewModal')).hide();
+
+        // Show success message
+        alert('Verification request approved successfully!');
+
+        // Refresh queue and stats
+        await loadVerificationQueue();
+        await loadDashboardStats();
+
+      } catch (error) {
+        console.error('Error approving verification:', error);
+        alert('Error approving verification: ' + error.message);
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Approve';
+      }
+    });
+
+    // Deny verification - show reason modal
+    document.getElementById('deny-verification-btn').addEventListener('click', function () {
+      if (!currentVerificationId) {
+        return;
+      }
+
+      // Hide review modal
+      bootstrap.Modal.getInstance(document.getElementById('verificationReviewModal')).hide();
+
+      // Show denial reason modal
+      document.getElementById('denial-reason-text').value = '';
+      document.getElementById('denial-error').classList.add('d-none');
+      const modal = new bootstrap.Modal(document.getElementById('denialReasonModal'));
+      modal.show();
+    });
+
+    // Submit denial with reason
+    document.getElementById('submit-denial-btn').addEventListener('click', async function () {
+      const reasonText = document.getElementById('denial-reason-text').value.trim();
+      const errorDiv = document.getElementById('denial-error');
+
+      errorDiv.classList.add('d-none');
+
+      if (!reasonText) {
+        errorDiv.textContent = 'Please provide a reason for denial';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
+
+      try {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        await adminModule.denyVerification(currentVerificationId, reasonText);
+
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('denialReasonModal')).hide();
+
+        // Show success message
+        alert('Verification request denied successfully!');
+
+        // Refresh queue and stats
+        await loadVerificationQueue();
+        await loadDashboardStats();
+
+      } catch (error) {
+        console.error('Error denying verification:', error);
+        errorDiv.textContent = 'Error denying verification: ' + error.message;
+        errorDiv.classList.remove('d-none');
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Submit Denial';
+      }
+    });
+
+    // Refresh verification queue
+    window.refreshVerificationQueue = async function () {
+      await loadVerificationQueue();
+      await loadDashboardStats();
+    };
+
+    // Load ad moderation queue
+    async function loadAdModeration() {
+      try {
+        const moderationContent = document.getElementById('ad-moderation-content');
+        moderationContent.innerHTML = '<p class="text-muted" data-i18n="admin.loadingAds">Loading pending ads...</p>';
+
+        const pendingAds = await adsModule.getPendingAds();
+
+        if (pendingAds.length === 0) {
+          moderationContent.innerHTML = `
+          <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <span data-i18n="admin.noPendingAds">No pending ads to review.</span>
+          </div>
+        `;
+          return;
+        }
+
+        let html = '<div class="list-group">';
+
+        pendingAds.forEach(ad => {
+          const createdDate = ad.createdAt ? new Date(ad.createdAt.toDate()).toLocaleDateString() : 'N/A';
+          const startDate = ad.startDate ? new Date(ad.startDate.toDate()).toLocaleDateString() : 'N/A';
+          const endDate = ad.endDate ? new Date(ad.endDate.toDate()).toLocaleDateString() : 'N/A';
+
+          html += `
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h6 class="mb-1">
+                  ${ad.title || 'Untitled Ad'}
+                  <span class="badge bg-${ad.type === 'text' ? 'primary' : 'info'} ms-2">${ad.type === 'text' ? 'Text' : 'Image'}</span>
+                </h6>
+                <p class="mb-1">
+                  <strong data-i18n="admin.provider">Provider:</strong> ${ad.providerName || 'Unknown'}<br>
+                  <strong data-i18n="admin.submitted">Submitted:</strong> ${createdDate}<br>
+                  <strong data-i18n="ads.period">Period:</strong> ${startDate} - ${endDate}<br>
+                  ${ad.description ? `<small>${ad.description.substring(0, 100)}${ad.description.length > 100 ? '...' : ''}</small>` : ''}
+                </p>
+              </div>
+              <button class="btn btn-sm btn-outline-primary" onclick="reviewAd('${ad.id}')">
+                <i class="bi bi-eye"></i>
+                <span data-i18n="admin.review">Review</span>
+              </button>
+            </div>
+          </div>
+        `;
+        });
+
+        html += '</div>';
+        moderationContent.innerHTML = html;
+
+      } catch (error) {
+        console.error('Error loading ad moderation:', error);
+        document.getElementById('ad-moderation-content').innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          <span data-i18n="error.loadingAds">Error loading ads. Please try again.</span>
+        </div>
+      `;
+      }
+    }
+
+    let currentAdId = null;
+
+    // Review ad
+    window.reviewAd = async function (adId) {
+      try {
+        currentAdId = adId;
+
+        // Get ad details
+        const adDoc = await db.collection('ads').doc(adId).get();
+        const adData = adDoc.data();
+
+        // Build review content
+        let html = `
+        <div class="mb-4">
+          <h6 data-i18n="admin.adDetails">Ad Details</h6>
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <th data-i18n="ads.title">Title:</th>
+                <td>${adData?.title || 'N/A'}</td>
+              </tr>
+              <tr>
+                <th data-i18n="ads.type">Type:</th>
+                <td>
+                  <span class="badge bg-${adData.type === 'text' ? 'primary' : 'info'}">
+                    ${adData.type === 'text' ? 'Text' : 'Image'}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th data-i18n="admin.provider">Provider:</th>
+                <td>${adData?.providerName || 'Unknown'}</td>
+              </tr>
+              <tr>
+                <th data-i18n="ads.period">Period:</th>
+                <td>
+                  ${adData.startDate ? new Date(adData.startDate.toDate()).toLocaleDateString() : 'N/A'} - 
+                  ${adData.endDate ? new Date(adData.endDate.toDate()).toLocaleDateString() : 'N/A'}
+                </td>
+              </tr>
+              <tr>
+                <th data-i18n="ads.displayLocations">Display Locations:</th>
+                <td>${adData.displayLocations ? adData.displayLocations.join(', ') : 'N/A'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="mb-4">
+          <h6 data-i18n="ads.content">Ad Content</h6>
+      `;
+
+        if (adData.type === 'text') {
+          html += `
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">${adData.title || 'Untitled'}</h5>
+              <p class="card-text">${adData.description || adData.content || 'No content'}</p>
+              <span class="badge bg-primary">Sponsored</span>
+            </div>
+          </div>
+        `;
+        } else if (adData.type === 'image') {
+          html += `
+          <div class="card">
+            <div class="card-body text-center">
+              ${adData.content ? `<img src="${adData.content}" class="img-fluid mb-2" style="max-height: 300px;" alt="${adData.title}">` : '<p class="text-muted">No image</p>'}
+              <h5 class="card-title">${adData.title || 'Untitled'}</h5>
+              ${adData.description ? `<p class="card-text">${adData.description}</p>` : ''}
+              <span class="badge bg-primary">Sponsored</span>
+            </div>
+          </div>
+        `;
+        }
+
+        html += '</div>';
+
+        document.getElementById('ad-review-content').innerHTML = html;
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('adReviewModal'));
+        modal.show();
+
+      } catch (error) {
+        console.error('Error loading ad details:', error);
+        alert('Error loading ad details. Please try again.');
+      }
+    };
+
+    // Approve ad
+    document.getElementById('approve-ad-btn').addEventListener('click', async function () {
+      if (!currentAdId) {
+        return;
+      }
+
+      if (!confirm('Are you sure you want to approve this ad?')) {
+        return;
+      }
+
+      try {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Approving...';
+
+        await adsModule.moderateAd(currentAdId, 'approve');
+
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('adReviewModal')).hide();
+
+        // Show success message
+        alert('Ad approved successfully!');
+
+        // Refresh moderation queue
+        await loadAdModeration();
+
+      } catch (error) {
+        console.error('Error approving ad:', error);
+        alert('Error approving ad: ' + error.message);
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Approve';
+      }
+    });
+
+    // Reject ad - show reason modal
+    document.getElementById('reject-ad-btn').addEventListener('click', function () {
+      if (!currentAdId) {
+        return;
+      }
+
+      // Hide review modal
+      bootstrap.Modal.getInstance(document.getElementById('adReviewModal')).hide();
+
+      // Show rejection reason modal
+      document.getElementById('ad-rejection-text').value = '';
+      document.getElementById('ad-rejection-error').classList.add('d-none');
+      const modal = new bootstrap.Modal(document.getElementById('adRejectionModal'));
+      modal.show();
+    });
+
+    // Submit ad rejection with reason
+    document.getElementById('submit-ad-rejection-btn').addEventListener('click', async function () {
+      const reasonText = document.getElementById('ad-rejection-text').value.trim();
+      const errorDiv = document.getElementById('ad-rejection-error');
+
+      errorDiv.classList.add('d-none');
+
+      if (!reasonText) {
+        errorDiv.textContent = 'Please provide a reason for rejection';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
+
+      try {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        await adsModule.moderateAd(currentAdId, 'reject', reasonText);
+
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('adRejectionModal')).hide();
+
+        // Show success message
+        alert('Ad rejected successfully!');
+
+        // Refresh moderation queue
+        await loadAdModeration();
+
+      } catch (error) {
+        console.error('Error rejecting ad:', error);
+        errorDiv.textContent = 'Error rejecting ad: ' + error.message;
+        errorDiv.classList.remove('d-none');
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Submit Rejection';
+      }
+    });
+
+    // Refresh ad moderation
+    window.refreshAdModeration = async function () {
+      await loadAdModeration();
+    };
+
+    // Load providers with filters
+    window.loadProviders = async function () {
+      try {
+        const listContent = document.getElementById('provider-list-content');
+        listContent.innerHTML = '<p class="text-muted" data-i18n="admin.loadingProviders">Loading providers...</p>';
+
+        const search = document.getElementById('provider-search').value.trim();
+        const type = document.getElementById('filter-type').value;
+        const verified = document.getElementById('filter-verified').value;
+        const claimed = document.getElementById('filter-claimed').value;
+
+        const options = {
+          search: search || undefined,
+          type: type || undefined,
+          verified: verified ? verified === 'true' : undefined,
+          claimed: claimed ? claimed === 'true' : undefined,
+          limit: 100
+        };
+
+        const providers = await adminModule.getAllProviders(options);
+
+        if (providers.length === 0) {
+          listContent.innerHTML = `
+            <div class="alert alert-info" role="alert">
+              <i class="bi bi-info-circle"></i>
+              <span data-i18n="admin.noProviders">No providers found.</span>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '<div class="table-responsive"><table class="table table-hover">';
+        html += `
+          <thead>
+            <tr>
+              <th data-i18n="profile.name">Name</th>
+              <th data-i18n="profile.type">Type</th>
+              <th data-i18n="profile.phone">Phone</th>
+              <th data-i18n="admin.status">Status</th>
+              <th data-i18n="admin.actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+        `;
+
+        providers.forEach(provider => {
+          const verifiedBadge = provider.verified ? 
+            '<span class="badge bg-success">Verified</span>' : 
+            '<span class="badge bg-secondary">Unverified</span>';
+          const claimedBadge = provider.claimed ? 
+            '<span class="badge bg-info">Claimed</span>' : '';
+
+          html += `
+            <tr>
+              <td>${provider.name || 'N/A'}</td>
+              <td>${provider.type || 'N/A'}</td>
+              <td>${provider.phone || 'N/A'}</td>
+              <td>${verifiedBadge} ${claimedBadge}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="editProvider('${provider.id}')">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteProvider('${provider.id}', '${provider.name}')">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+
+        html += '</tbody></table></div>';
+        listContent.innerHTML = html;
+
+      } catch (error) {
+        console.error('Error loading providers:', error);
+        document.getElementById('provider-list-content').innerHTML = `
+          <div class="alert alert-danger" role="alert">
+            <span data-i18n="error.loadingProviders">Error loading providers. Please try again.</span>
+          </div>
+        `;
+      }
+    };
+
+    // Show create provider modal
+    window.showCreateProviderModal = function () {
+      // Reset form
+      document.getElementById('edit-provider-form').reset();
+      document.getElementById('edit-provider-id').value = '';
+      document.getElementById('editProviderModalLabel').textContent = 'Create Provider';
+      document.getElementById('edit-provider-error').classList.add('d-none');
+      
+      const modal = new bootstrap.Modal(document.getElementById('editProviderModal'));
+      modal.show();
+    };
+
+    // Edit provider
+    window.editProvider = async function (providerId) {
+      try {
+        const providerDoc = await db.collection('providers').doc(providerId).get();
+        const provider = providerDoc.data();
+
+        document.getElementById('edit-provider-id').value = providerId;
+        document.getElementById('edit-provider-name').value = provider.name || '';
+        document.getElementById('edit-provider-type').value = provider.type || 'clinic';
+        document.getElementById('edit-provider-phone').value = provider.phone || '';
+        document.getElementById('edit-provider-specialty').value = provider.specialty || '';
+        document.getElementById('edit-provider-address').value = provider.address?.street || '';
+        document.getElementById('edit-provider-verified').checked = provider.verified || false;
+        document.getElementById('edit-provider-accessibility').checked = provider.accessibility || false;
+        document.getElementById('edit-provider-homevisits').checked = provider.homeVisits || false;
+        document.getElementById('editProviderModalLabel').textContent = 'Edit Provider';
+        document.getElementById('edit-provider-error').classList.add('d-none');
+
+        const modal = new bootstrap.Modal(document.getElementById('editProviderModal'));
+        modal.show();
+
+      } catch (error) {
+        console.error('Error loading provider:', error);
+        alert('Error loading provider details. Please try again.');
+      }
+    };
+
+    // Save provider (create or update)
+    document.getElementById('save-provider-btn').addEventListener('click', async function () {
+      const providerId = document.getElementById('edit-provider-id').value;
+      const errorDiv = document.getElementById('edit-provider-error');
+      errorDiv.classList.add('d-none');
+
+      const providerData = {
+        name: document.getElementById('edit-provider-name').value.trim(),
+        type: document.getElementById('edit-provider-type').value,
+        phone: document.getElementById('edit-provider-phone').value.trim(),
+        specialty: document.getElementById('edit-provider-specialty').value.trim(),
+        address: {
+          street: document.getElementById('edit-provider-address').value.trim()
+        },
+        verified: document.getElementById('edit-provider-verified').checked,
+        accessibility: document.getElementById('edit-provider-accessibility').checked,
+        homeVisits: document.getElementById('edit-provider-homevisits').checked
+      };
+
+      if (!providerData.name || !providerData.type) {
+        errorDiv.textContent = 'Name and type are required';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
+
+      try {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+        if (providerId) {
+          // Update existing provider
+          await adminModule.updateProvider(providerId, providerData);
+          alert('Provider updated successfully!');
+        } else {
+          // Create new provider
+          await adminModule.createProvider(providerData);
+          alert('Provider created successfully!');
+        }
+
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('editProviderModal')).hide();
+
+        // Refresh provider list
+        await loadProviders();
+
+      } catch (error) {
+        console.error('Error saving provider:', error);
+        errorDiv.textContent = 'Error saving provider: ' + error.message;
+        errorDiv.classList.remove('d-none');
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Save Changes';
+      }
+    });
+
+    // Confirm delete provider
+    window.confirmDeleteProvider = function (providerId, providerName) {
+      document.getElementById('delete-provider-id').value = providerId;
+      document.getElementById('delete-provider-name').textContent = providerName;
+
+      const modal = new bootstrap.Modal(document.getElementById('deleteProviderModal'));
+      modal.show();
+    };
+
+    // Delete provider
+    document.getElementById('confirm-delete-btn').addEventListener('click', async function () {
+      const providerId = document.getElementById('delete-provider-id').value;
+
+      try {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+
+        await adminModule.deleteProvider(providerId);
+
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('deleteProviderModal')).hide();
+
+        alert('Provider deleted successfully!');
+
+        // Refresh provider list
+        await loadProviders();
+
+      } catch (error) {
+        console.error('Error deleting provider:', error);
+        alert('Error deleting provider: ' + error.message);
+      } finally {
+        this.disabled = false;
+        this.textContent = 'Delete';
+      }
+    });
+
+    // Show bulk import modal
+    window.showBulkImportModal = function () {
+      // Reset modal
+      document.getElementById('csv-file-input').value = '';
+      document.getElementById('import-progress').classList.add('d-none');
+      document.getElementById('import-results').classList.add('d-none');
+      document.getElementById('import-error').classList.add('d-none');
+      document.getElementById('start-import-btn').disabled = false;
+
+      const modal = new bootstrap.Modal(document.getElementById('bulkImportModal'));
+      modal.show();
+    };
+
+    // Start bulk import
+    document.getElementById('start-import-btn').addEventListener('click', async function () {
+      const fileInput = document.getElementById('csv-file-input');
+      const errorDiv = document.getElementById('import-error');
+      const progressDiv = document.getElementById('import-progress');
+      const resultsDiv = document.getElementById('import-results');
+
+      errorDiv.classList.add('d-none');
+      resultsDiv.classList.add('d-none');
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        errorDiv.textContent = 'Please select a CSV file';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
+
+      const file = fileInput.files[0];
+
+      if (!file.name.endsWith('.csv')) {
+        errorDiv.textContent = 'Please select a valid CSV file';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
+
+      try {
+        this.disabled = true;
+        progressDiv.classList.remove('d-none');
+
+        // Read file
+        const csvText = await file.text();
+
+        // Import providers
+        const results = await adminModule.bulkImportProviders(csvText);
+
+        // Hide progress
+        progressDiv.classList.add('d-none');
+
+        // Show results
+        document.getElementById('import-success-count').textContent = results.success;
+        document.getElementById('import-error-count').textContent = results.errors.length;
+        resultsDiv.classList.remove('d-none');
+
+        // Show errors if any
+        if (results.errors.length > 0) {
+          const errorsListDiv = document.getElementById('import-errors-list');
+          const errorsContent = document.getElementById('import-errors-content');
+          
+          let errorsHtml = '';
+          results.errors.forEach(error => {
+            errorsHtml += `
+              <div class="list-group-item">
+                <strong>Row ${error.row}:</strong> ${error.error}
+              </div>
+            `;
+          });
+          
+          errorsContent.innerHTML = errorsHtml;
+          errorsListDiv.classList.remove('d-none');
+        }
+
+        // Refresh provider list and stats
+        await loadProviders();
+        await loadDashboardStats();
+
+      } catch (error) {
+        console.error('Error importing providers:', error);
+        progressDiv.classList.add('d-none');
+        errorDiv.textContent = 'Error importing providers: ' + error.message;
+        errorDiv.classList.remove('d-none');
+      } finally {
+        this.disabled = false;
+      }
+    });
+
+    // Load system data
+    async function loadSystemData() {
+      try {
+        const systemData = await adminModule.getSystemData();
+
+        // Load account types
+        const accountTypesList = document.getElementById('account-types-list');
+        if (systemData.accountTypes && systemData.accountTypes.length > 0) {
+          let html = '<div class="list-group list-group-flush">';
+          systemData.accountTypes.forEach(type => {
+            html += `
+              <div class="list-group-item d-flex justify-content-between align-items-center py-1 px-2">
+                <span>${type}</span>
+                <button class="btn btn-sm btn-outline-danger" onclick="removeAccountTypeItem('${type}')">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            `;
+          });
+          html += '</div>';
+          accountTypesList.innerHTML = html;
+        } else {
+          accountTypesList.innerHTML = '<p class="text-muted small">No account types</p>';
+        }
+
+        // Load specialties
+        const specialtiesList = document.getElementById('specialties-list');
+        if (systemData.specialties && systemData.specialties.length > 0) {
+          let html = '<div class="list-group list-group-flush">';
+          systemData.specialties.forEach(specialty => {
+            html += `
+              <div class="list-group-item d-flex justify-content-between align-items-center py-1 px-2">
+                <span>${specialty}</span>
+                <button class="btn btn-sm btn-outline-danger" onclick="removeSpecialtyItem('${specialty}')">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            `;
+          });
+          html += '</div>';
+          specialtiesList.innerHTML = html;
+        } else {
+          specialtiesList.innerHTML = '<p class="text-muted small">No specialties</p>';
+        }
+
+        // Load service categories
+        const categoriesList = document.getElementById('categories-list');
+        if (systemData.serviceCategories && systemData.serviceCategories.length > 0) {
+          let html = '<div class="list-group list-group-flush">';
+          systemData.serviceCategories.forEach(category => {
+            html += `
+              <div class="list-group-item d-flex justify-content-between align-items-center py-1 px-2">
+                <span>${category}</span>
+                <button class="btn btn-sm btn-outline-danger" onclick="removeCategoryItem('${category}')">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            `;
+          });
+          html += '</div>';
+          categoriesList.innerHTML = html;
+        } else {
+          categoriesList.innerHTML = '<p class="text-muted small">No categories</p>';
+        }
+
+      } catch (error) {
+        console.error('Error loading system data:', error);
+      }
+    }
+
+    // Add new account type
+    window.addNewAccountType = async function () {
+      const input = document.getElementById('new-account-type');
+      const value = input.value.trim();
+
+      if (!value) {
+        return;
+      }
+
+      try {
+        await adminModule.addAccountType(value);
+        input.value = '';
+        await loadSystemData();
+      } catch (error) {
+        console.error('Error adding account type:', error);
+        alert('Error adding account type: ' + error.message);
+      }
+    };
+
+    // Remove account type
+    window.removeAccountTypeItem = async function (type) {
+      if (!confirm(`Remove account type "${type}"?`)) {
+        return;
+      }
+
+      try {
+        await adminModule.removeAccountType(type);
+        await loadSystemData();
+      } catch (error) {
+        console.error('Error removing account type:', error);
+        alert('Error removing account type: ' + error.message);
+      }
+    };
+
+    // Add new specialty
+    window.addNewSpecialty = async function () {
+      const input = document.getElementById('new-specialty');
+      const value = input.value.trim();
+
+      if (!value) {
+        return;
+      }
+
+      try {
+        await adminModule.addSpecialty(value);
+        input.value = '';
+        await loadSystemData();
+      } catch (error) {
+        console.error('Error adding specialty:', error);
+        alert('Error adding specialty: ' + error.message);
+      }
+    };
+
+    // Remove specialty
+    window.removeSpecialtyItem = async function (specialty) {
+      if (!confirm(`Remove specialty "${specialty}"?`)) {
+        return;
+      }
+
+      try {
+        await adminModule.removeSpecialty(specialty);
+        await loadSystemData();
+      } catch (error) {
+        console.error('Error removing specialty:', error);
+        alert('Error removing specialty: ' + error.message);
+      }
+    };
+
+    // Add new category
+    window.addNewCategory = async function () {
+      const input = document.getElementById('new-category');
+      const value = input.value.trim();
+
+      if (!value) {
+        return;
+      }
+
+      try {
+        await adminModule.addServiceCategory(value);
+        input.value = '';
+        await loadSystemData();
+      } catch (error) {
+        console.error('Error adding category:', error);
+        alert('Error adding category: ' + error.message);
+      }
+    };
+
+    // Remove category
+    window.removeCategoryItem = async function (category) {
+      if (!confirm(`Remove category "${category}"?`)) {
+        return;
+      }
+
+      try {
+        await adminModule.removeServiceCategory(category);
+        await loadSystemData();
+      } catch (error) {
+        console.error('Error removing category:', error);
+        alert('Error removing category: ' + error.message);
+      }
+    };
+
+    // Set up real-time updates for statistics
+    function setupRealtimeUpdates() {
+      // Listen for changes in providers collection
+      db.collection('providers').onSnapshot(() => {
+        loadDashboardStats();
+      });
+
+      // Listen for changes in verifications collection
+      db.collection('verifications').where('status', '==', 'pending').onSnapshot(() => {
+        loadDashboardStats();
+        loadVerificationQueue();
+      });
+
+      // Listen for changes in ads collection
+      db.collection('ads').where('status', '==', 'pending').onSnapshot(() => {
+        loadAdModeration();
+      });
+
+      // Listen for changes in system data
+      db.collection('system').doc('data').onSnapshot(() => {
+        loadSystemData();
+      });
+    }
+
+    // Initialize
+    loadDashboardStats();
+    loadVerificationQueue();
+    loadAdModeration();
+    loadProviders();
+    loadSystemData();
+    setupRealtimeUpdates();
+  })();
+</script>

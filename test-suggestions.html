@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Suggestions - CityHealth</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/themes.css">
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="mb-4">Smart Suggestions Test</h1>
+        
+        <div class="mb-4">
+            <button id="load-suggestions-btn" class="btn btn-primary">Load Suggestions</button>
+            <button id="clear-dismissed-btn" class="btn btn-secondary">Clear Dismissed</button>
+            <button id="add-test-data-btn" class="btn btn-info">Add Test Search History</button>
+        </div>
+        
+        <div id="suggestions-container"></div>
+        
+        <div class="mt-5">
+            <h3>Debug Info</h3>
+            <pre id="debug-info" class="bg-light p-3 rounded"></pre>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+    <!-- Application JS -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script src="assets/js/suggestions.js"></script>
+    <script src="assets/js/suggestions-ui.js"></script>
+
+    <script>
+        // Test script
+        document.addEventListener('DOMContentLoaded', () => {
+            const debugInfo = document.getElementById('debug-info');
+            
+            // Update debug info
+            function updateDebugInfo() {
+                const info = {
+                    'Firebase initialized': !!(window.db && window.auth),
+                    'Suggestions module loaded': !!window.suggestions,
+                    'SuggestionsUI module loaded': !!window.suggestionsUI,
+                    'Search history': window.suggestions ? window.suggestions.getSearchHistory() : [],
+                    'Dismissed suggestions': window.suggestions ? window.suggestions.dismissedSuggestions : [],
+                    'User interactions': window.suggestions ? window.suggestions.userInteractions : {}
+                };
+                debugInfo.textContent = JSON.stringify(info, null, 2);
+            }
+            
+            updateDebugInfo();
+            
+            // Load suggestions button
+            document.getElementById('load-suggestions-btn').addEventListener('click', async () => {
+                if (window.suggestionsUI) {
+                    await window.suggestionsUI.renderSuggestions('suggestions-container', {
+                        userLocation: 'Sidi Bel Abbès'
+                    });
+                    updateDebugInfo();
+                } else {
+                    alert('SuggestionsUI not loaded');
+                }
+            });
+            
+            // Clear dismissed button
+            document.getElementById('clear-dismissed-btn').addEventListener('click', () => {
+                if (window.suggestions) {
+                    window.suggestions.clearDismissedSuggestions();
+                    alert('Dismissed suggestions cleared');
+                    updateDebugInfo();
+                } else {
+                    alert('Suggestions module not loaded');
+                }
+            });
+            
+            // Add test data button
+            document.getElementById('add-test-data-btn').addEventListener('click', () => {
+                const testHistory = [
+                    {
+                        query: 'cardiology',
+                        serviceType: 'doctor',
+                        location: 'Sidi Bel Abbès',
+                        timestamp: Date.now()
+                    },
+                    {
+                        query: 'pharmacy',
+                        serviceType: 'pharmacy',
+                        location: 'Sidi Bel Abbès',
+                        timestamp: Date.now() - 3600000
+                    }
+                ];
+                localStorage.setItem('searchHistory', JSON.stringify(testHistory));
+                
+                if (window.suggestions) {
+                    window.suggestions.trackInteraction('test-provider-1', 'viewed', { type: 'clinic' });
+                    window.suggestions.trackInteraction('test-provider-2', 'viewed', { type: 'hospital' });
+                }
+                
+                alert('Test data added');
+                updateDebugInfo();
+            });
+        });
+    </script>
+</body>
+</html>

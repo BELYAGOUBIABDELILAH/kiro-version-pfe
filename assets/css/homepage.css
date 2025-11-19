@@ -1,0 +1,313 @@
+/**
+ * Homepage Styles
+ * Styles specific to the homepage layout and components
+ */
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.95;
+  margin-bottom: 2rem;
+}
+
+.hero-search-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--link-color);
+  border-radius: 2px;
+}
+
+/* Provider Cards */
+.provider-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.provider-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.provider-card:focus {
+  outline: 3px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+.provider-card .card-img-top {
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Emergency Section */
+.emergency-section {
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Medical Ads Section */
+.medical-ads-section {
+  margin-bottom: 2rem;
+}
+
+.medical-ads-section .carousel-item {
+  padding: 0 1rem;
+}
+
+.medical-ads-section .card {
+  min-height: 250px;
+}
+
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+  opacity: 0.7;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 1;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 1rem;
+}
+
+/* Featured Providers Section */
+.featured-providers-section {
+  margin-bottom: 2rem;
+}
+
+/* Suggestions Section */
+.suggestions-section {
+  margin-bottom: 2rem;
+}
+
+/* Loading Placeholders */
+.placeholder-glow .placeholder {
+  animation: placeholder-glow 2s ease-in-out infinite;
+}
+
+@keyframes placeholder-glow {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-search-container {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .provider-card .card-img-top {
+    height: 150px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 2rem 0;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .hero-section {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+}
+
+[data-theme="dark"] .hero-search-container {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .provider-card {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .emergency-section {
+  background: var(--bg-tertiary);
+}
+
+/* RTL Support */
+html[dir="rtl"] .section-title::after {
+  left: auto;
+  right: 0;
+}
+
+html[dir="rtl"] .carousel-control-prev {
+  right: 0;
+  left: auto;
+}
+
+html[dir="rtl"] .carousel-control-next {
+  left: 0;
+  right: auto;
+}
+
+/* Accessibility Improvements */
+.provider-card:focus-visible {
+  outline: 3px solid var(--link-color);
+  outline-offset: 3px;
+}
+
+/* Performance Optimizations */
+/* Use will-change sparingly - only on hover for better performance */
+.provider-card:hover {
+  will-change: transform;
+}
+
+.carousel-item.active {
+  will-change: transform;
+}
+
+/* Optimize image rendering */
+.card-img-top,
+.carousel img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Lazy loading placeholder styles */
+.image-placeholder {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.lazy-loaded {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .provider-card,
+  .carousel-item,
+  .image-placeholder,
+  .lazy-loaded,
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Content visibility for better rendering performance */
+.featured-providers-section,
+.suggestions-section,
+.medical-ads-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* GPU acceleration for smooth animations */
+.provider-card,
+.carousel-inner {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize repaints */
+.hero-section,
+.emergency-section {
+  contain: layout style paint;
+}
+
+/* Optimize font loading - handled by system fonts */
+
+/* Print Styles */
+@media print {
+  .hero-section {
+    background: white;
+    color: black;
+  }
+
+  .medical-ads-section,
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: none;
+  }
+}

@@ -1,0 +1,485 @@
+/**
+ * Main CSS - Base styles and layout
+ */
+
+/* CSS Custom Properties for theming */
+:root {
+  /* Colors - Light Mode (WCAG AA compliant) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #495057;  /* Improved from #6c757d for better contrast */
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --link-color: #0d6efd;
+  --link-hover: #0a58ca;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #cc9a06;  /* Improved from #ffc107 for better contrast */
+  --info-color: #0891b2;  /* Improved from #0dcaf0 for better contrast */
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+  
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-arabic: "Noto Sans Arabic", "Segoe UI", Arial, sans-serif;
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --line-height-base: 1.5;
+  
+  /* Shadows */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  
+  /* Border Radius */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+  
+  /* Transitions */
+  --transition-base: all 0.3s ease;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  margin: 0;
+  padding: 0;
+  transition: var(--transition-base);
+}
+
+/* Arabic font support */
+html[lang="ar"] body {
+  font-family: var(--font-family-arabic);
+}
+
+/* RTL support for Arabic */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--bg-primary);
+  color: var(--link-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-decoration: none;
+  border: 2px solid var(--link-color);
+  border-radius: var(--border-radius-md);
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 10px;
+  left: 10px;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Main content area */
+main {
+  min-height: calc(100vh - 200px);
+  padding-top: var(--spacing-lg);
+  padding-bottom: var(--spacing-xl);
+}
+
+/* Container utilities */
+.container-fluid {
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+/* Focus indicators for accessibility */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[tabindex]:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Enhanced focus indicators for keyboard navigation */
+body.keyboard-navigation *:focus {
+  outline: 3px solid var(--link-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.25);
+}
+
+/* Remove focus outline for mouse users */
+body:not(.keyboard-navigation) *:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Focus visible for better keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--link-color);
+  outline-offset: 3px;
+}
+
+/* Skip link enhanced visibility */
+.skip-link:focus {
+  top: 10px;
+  left: 10px;
+  z-index: 10000;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--link-color);
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Minimum touch target sizes for accessibility (WCAG 2.1 Level AA) */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn,
+.nav-link,
+.form-check-input,
+.form-check-label {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Exception for inline text links */
+a:not(.btn):not(.nav-link):not([role="button"]) {
+  min-height: auto;
+  min-width: auto;
+  display: inline;
+}
+
+/* Ensure form controls meet minimum size */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="search"],
+select,
+textarea {
+  min-height: 44px;
+}
+
+/* ARIA live region for screen reader announcements */
+#aria-live-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Ensure proper contrast for disabled elements */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Ensure placeholder text has sufficient contrast */
+::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+/* Ensure selection has good contrast */
+::selection {
+  background-color: var(--link-color);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--link-color);
+  color: white;
+}
+
+/* Link styles */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+/* Button base styles */
+.btn {
+  transition: var(--transition-base);
+  border-radius: var(--border-radius-md);
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid var(--border-color);
+  border-top-color: var(--link-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+/* Error message */
+.error-message {
+  padding: var(--spacing-md);
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Success message */
+.success-message {
+  padding: var(--spacing-md);
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Card styles */
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: var(--spacing-xs); }
+.mt-2 { margin-top: var(--spacing-sm); }
+.mt-3 { margin-top: var(--spacing-md); }
+.mt-4 { margin-top: var(--spacing-lg); }
+.mt-5 { margin-top: var(--spacing-xl); }
+
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+.mb-5 { margin-bottom: var(--spacing-xl); }
+
+.p-1 { padding: var(--spacing-xs); }
+.p-2 { padding: var(--spacing-sm); }
+.p-3 { padding: var(--spacing-md); }
+.p-4 { padding: var(--spacing-lg); }
+.p-5 { padding: var(--spacing-xl); }
+
+
+/* Page loader */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.page-loader.active {
+  display: flex;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Utility classes */
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.d-none {
+  display: none !important;
+}
+
+/* Screen reader only */
+.sr-only,
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Lazy loading styles */
+img[data-src],
+img[data-srcset] {
+  background-color: var(--bg-secondary);
+  min-height: 200px;
+}
+
+img.lazy-loading {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+img.lazy-loaded {
+  opacity: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+img.lazy-error {
+  opacity: 0.3;
+  background-color: var(--bg-tertiary);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Placeholder for lazy loaded images */
+.image-placeholder {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Slow connection optimizations */
+.slow-connection img {
+  image-rendering: auto;
+}
+
+.slow-connection video {
+  display: none;
+}
+
+/* Update notification */
+.update-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  max-width: 400px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

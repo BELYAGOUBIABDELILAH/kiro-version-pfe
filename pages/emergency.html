@@ -1,0 +1,307 @@
+<!-- Emergency Services Page -->
+<div class="container py-4">
+  <!-- Emergency Header -->
+  <div class="emergency-header text-center mb-4">
+    <div class="emergency-icon mb-3">
+      <i class="bi bi-hospital" style="font-size: 3rem; color: #dc3545;"></i>
+    </div>
+    <h1 class="text-danger fw-bold" data-i18n="emergency.title">Emergency Services - 24/7</h1>
+    <p class="lead" data-i18n="emergency.subtitle">Healthcare providers available around the clock</p>
+  </div>
+
+  <!-- Loading State -->
+  <div id="emergency-loading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden" data-i18n="common.loading">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted" data-i18n="emergency.loadingMessage">Loading emergency providers...</p>
+  </div>
+
+  <!-- Error State -->
+  <div id="emergency-error" class="alert alert-danger d-none" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span data-i18n="emergency.error">Unable to load emergency providers. Please try again.</span>
+  </div>
+
+  <!-- Emergency Providers List -->
+  <div id="emergency-providers" class="row g-4" style="display: none;">
+    <!-- Providers will be loaded dynamically -->
+  </div>
+
+  <!-- No Results -->
+  <div id="emergency-no-results" class="text-center py-5 d-none">
+    <i class="bi bi-info-circle" style="font-size: 3rem; color: #6c757d;"></i>
+    <p class="mt-3 text-muted" data-i18n="emergency.noProviders">No emergency providers available at this time.</p>
+  </div>
+</div>
+
+<style>
+/* Emergency Page Specific Styles */
+.emergency-header {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 2px solid #dc3545;
+}
+
+.emergency-provider-card {
+  border: 2px solid #dc3545;
+  border-radius: 0.75rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+.emergency-provider-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(220, 53, 69, 0.2);
+}
+
+.emergency-badge {
+  background: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emergency-contact {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+.emergency-call-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emergency-call-btn:hover {
+  background: #bb2d3b;
+  color: white;
+}
+
+.emergency-info-item {
+  display: flex;
+  align-items: start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.emergency-info-icon {
+  color: #dc3545;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+</style>
+
+<script>
+(async function() {
+  const loadingEl = document.getElementById('emergency-loading');
+  const errorEl = document.getElementById('emergency-error');
+  const providersEl = document.getElementById('emergency-providers');
+  const noResultsEl = document.getElementById('emergency-no-results');
+
+  try {
+    // Start performance measurement
+    const startTime = performance.now();
+
+    // Wait for search module to be available
+    const waitForSearch = () => {
+      return new Promise((resolve) => {
+        if (window.search) {
+          resolve();
+        } else {
+          const checkInterval = setInterval(() => {
+            if (window.search) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 50);
+        }
+      });
+    };
+
+    await waitForSearch();
+
+    // Fetch emergency providers
+    const providers = await search.getEmergencyProviders();
+
+    // Calculate load time
+    const loadTime = performance.now() - startTime;
+    console.log(`Emergency providers loaded in ${loadTime.toFixed(2)}ms`);
+
+    // Hide loading
+    loadingEl.style.display = 'none';
+
+    if (providers.length === 0) {
+      noResultsEl.classList.remove('d-none');
+      return;
+    }
+
+    // Display providers
+    providersEl.style.display = 'flex';
+    providersEl.innerHTML = providers.map(provider => createEmergencyCard(provider)).join('');
+
+    // Log analytics
+    if (window.analytics) {
+      analytics.logEvent('view_emergency_page', {
+        provider_count: providers.length,
+        load_time_ms: loadTime
+      });
+    }
+
+  } catch (error) {
+    console.error('Error loading emergency providers:', error);
+    loadingEl.style.display = 'none';
+    errorEl.classList.remove('d-none');
+  }
+
+  /**
+   * Create emergency provider card HTML
+   */
+  function createEmergencyCard(provider) {
+    const currentLang = localStorage.getItem('language') || 'en';
+    
+    // Get localized name
+    let name = provider.name || 'Unknown Provider';
+    if (currentLang === 'ar' && provider.nameAr) {
+      name = provider.nameAr;
+    } else if (currentLang === 'fr' && provider.nameFr) {
+      name = provider.nameFr;
+    }
+
+    // Get localized specialty
+    let specialty = provider.specialty || '';
+    if (currentLang === 'ar' && provider.specialtyAr) {
+      specialty = provider.specialtyAr;
+    } else if (currentLang === 'fr' && provider.specialtyFr) {
+      specialty = provider.specialtyFr;
+    }
+
+    // Format phone number
+    const phone = provider.phone || '';
+    const phoneDisplay = phone.replace(/\s/g, '');
+
+    // Get address
+    const address = provider.address ? 
+      `${provider.address.street || ''}, ${provider.address.city || ''}`.trim() : 
+      'Address not available';
+
+    return `
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card emergency-provider-card h-100">
+          <div class="card-body">
+            <!-- Emergency Badge -->
+            <div class="mb-3">
+              <span class="emergency-badge">
+                <i class="bi bi-clock-fill"></i>
+                <span data-i18n="emergency.available247">24/7 Available</span>
+              </span>
+            </div>
+
+            <!-- Provider Name -->
+            <h4 class="card-title fw-bold mb-2">${escapeHtml(name)}</h4>
+
+            <!-- Provider Type & Specialty -->
+            <div class="mb-3">
+              <span class="badge bg-primary me-2">${escapeHtml(provider.type || 'Provider')}</span>
+              ${specialty ? `<span class="badge bg-secondary">${escapeHtml(specialty)}</span>` : ''}
+            </div>
+
+            <!-- Verified Badge -->
+            ${provider.verified ? `
+              <div class="mb-3">
+                <span class="badge bg-success">
+                  <i class="bi bi-patch-check-fill"></i>
+                  <span data-i18n="profile.verified">Verified</span>
+                </span>
+              </div>
+            ` : ''}
+
+            <!-- Contact Information -->
+            <div class="emergency-contact">
+              <!-- Phone -->
+              ${phone ? `
+                <div class="emergency-info-item">
+                  <i class="bi bi-telephone-fill emergency-info-icon"></i>
+                  <div>
+                    <strong data-i18n="emergency.phone">Phone:</strong><br>
+                    <a href="tel:${phoneDisplay}" class="text-decoration-none">${escapeHtml(phone)}</a>
+                  </div>
+                </div>
+              ` : ''}
+
+              <!-- Address -->
+              <div class="emergency-info-item">
+                <i class="bi bi-geo-alt-fill emergency-info-icon"></i>
+                <div>
+                  <strong data-i18n="emergency.address">Address:</strong><br>
+                  <span>${escapeHtml(address)}</span>
+                </div>
+              </div>
+
+              <!-- Accessibility -->
+              ${provider.accessibility ? `
+                <div class="emergency-info-item">
+                  <i class="bi bi-universal-access emergency-info-icon"></i>
+                  <span data-i18n="profile.accessible">Wheelchair Accessible</span>
+                </div>
+              ` : ''}
+
+              <!-- Home Visits -->
+              ${provider.homeVisits ? `
+                <div class="emergency-info-item">
+                  <i class="bi bi-house-fill emergency-info-icon"></i>
+                  <span data-i18n="profile.homeVisits">Home Visits Available</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+              ${phone ? `
+                <a href="tel:${phoneDisplay}" class="emergency-call-btn flex-grow-1 text-center">
+                  <i class="bi bi-telephone-fill"></i>
+                  <span data-i18n="emergency.callNow">Call Now</span>
+                </a>
+              ` : ''}
+              <a href="#/profile/${provider.id}" class="btn btn-outline-primary flex-grow-1" data-i18n="emergency.viewProfile">
+                View Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Escape HTML to prevent XSS
+   */
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Re-translate after content is loaded
+  if (window.i18n && window.i18n.translatePage) {
+    setTimeout(() => window.i18n.translatePage(), 100);
+  }
+})();
+</script>

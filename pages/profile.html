@@ -1,0 +1,740 @@
+<!-- Provider Profile Page -->
+<div class="container my-4">
+  <!-- Loading State -->
+  <div id="profile-loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <p class="mt-3" data-i18n="profile.loading">Loading profile...</p>
+  </div>
+
+  <!-- Error State -->
+  <div id="profile-error" class="alert alert-danger d-none" role="alert">
+    <h4 class="alert-heading" data-i18n="profile.error">Error</h4>
+    <p id="profile-error-message"></p>
+    <button class="btn btn-outline-danger" onclick="location.reload()">
+      <span data-i18n="profile.retry">Try Again</span>
+    </button>
+  </div>
+
+  <!-- Profile Content -->
+  <div id="profile-content" class="d-none">
+    <!-- Back Button -->
+    <div class="mb-3">
+      <button class="btn btn-link text-decoration-none" onclick="history.back()">
+        <i class="bi bi-arrow-left"></i>
+        <span data-i18n="profile.back">Back to Results</span>
+      </button>
+    </div>
+
+    <!-- Provider Header -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="d-flex align-items-start">
+              <div class="flex-grow-1">
+                <h1 class="h2 mb-2" id="provider-name"></h1>
+                <p class="text-muted mb-2">
+                  <span id="provider-type" class="badge bg-primary me-2"></span>
+                  <span id="provider-specialty"></span>
+                </p>
+
+                <!-- Badges -->
+                <div class="mb-3">
+                  <span id="verified-badge" class="badge bg-success me-2 d-none">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span data-i18n="profile.verified">Verified</span>
+                  </span>
+                  <span id="accessibility-badge" class="badge bg-info me-2 d-none">
+                    <i class="bi bi-universal-access"></i>
+                    <span data-i18n="profile.accessible">Wheelchair Accessible</span>
+                  </span>
+                  <span id="home-visit-badge" class="badge bg-warning text-dark me-2 d-none">
+                    <i class="bi bi-house-door"></i>
+                    <span data-i18n="profile.homeVisits">Home Visits Available</span>
+                  </span>
+                  <span id="emergency-badge" class="badge bg-danger me-2 d-none">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span data-i18n="profile.emergency">24/7 Emergency</span>
+                  </span>
+                </div>
+
+                <!-- Rating -->
+                <div id="provider-rating" class="mb-2">
+                  <span class="text-warning">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                  </span>
+                  <span class="ms-2" id="rating-value">4.5</span>
+                </div>
+
+                <!-- Description -->
+                <p id="provider-description" class="mb-0"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 text-md-end">
+            <!-- Claim Profile Button (for unclaimed preloaded profiles) -->
+            <button id="claim-profile-btn" class="btn btn-warning mb-2 d-none" onclick="handleClaimClick()">
+              <i class="bi bi-person-check"></i>
+              <span data-i18n="profile.claimProfile">Claim This Profile</span>
+            </button>
+
+            <!-- Favorite Button -->
+            <button id="favorite-btn" class="btn btn-outline-danger mb-2" onclick="handleFavoriteClick()">
+              <i class="bi bi-heart"></i>
+              <span data-i18n="profile.addFavorite">Add to Favorites</span>
+            </button>
+
+            <!-- Share Button -->
+            <button class="btn btn-outline-secondary mb-2" onclick="handleShareClick()">
+              <i class="bi bi-share"></i>
+              <span data-i18n="profile.share">Share</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-8">
+        <!-- Photo Gallery -->
+        <div id="photo-gallery-section" class="card mb-4 d-none">
+          <div class="card-header">
+            <h3 class="h5 mb-0" data-i18n="profile.photos">Photos</h3>
+          </div>
+          <div class="card-body">
+            <div id="photo-gallery" class="row g-2">
+              <!-- Photos will be dynamically loaded -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Operating Hours -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="h5 mb-0" data-i18n="profile.hours">Operating Hours</h3>
+          </div>
+          <div class="card-body">
+            <div id="operating-hours">
+              <!-- Hours will be dynamically loaded -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div id="services-section" class="card mb-4 d-none">
+          <div class="card-header">
+            <h3 class="h5 mb-0" data-i18n="profile.services">Services</h3>
+          </div>
+          <div class="card-body">
+            <ul id="services-list" class="list-unstyled mb-0">
+              <!-- Services will be dynamically loaded -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-lg-4">
+        <!-- Contact Information -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="h5 mb-0" data-i18n="profile.contact">Contact Information</h3>
+          </div>
+          <div class="card-body">
+            <!-- Phone -->
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-telephone-fill text-primary me-2"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block" data-i18n="profile.phone">Phone</small>
+                  <a id="provider-phone" href="#" class="text-decoration-none"></a>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyPhone()">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div id="email-section" class="mb-3 d-none">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block" data-i18n="profile.email">Email</small>
+                  <a id="provider-email" href="#" class="text-decoration-none"></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="mb-3">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-geo-alt-fill text-primary me-2 mt-1"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block" data-i18n="profile.address">Address</small>
+                  <p id="provider-address" class="mb-0"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Get Directions Button -->
+            <button class="btn btn-primary w-100" onclick="getDirections()">
+              <i class="bi bi-map"></i>
+              <span data-i18n="profile.directions">Get Directions</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3 class="h5 mb-0" data-i18n="profile.location">Location</h3>
+          </div>
+          <div class="card-body p-0">
+            <div id="provider-map" style="height: 300px; width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Photo Modal -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="photoModalLabel" data-i18n="profile.photoViewer">Photo Viewer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modal-photo" src="" alt="" class="img-fluid">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="profile.close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Claim Profile Modal -->
+<div class="modal fade" id="claimProfileModal" tabindex="-1" aria-labelledby="claimProfileModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="claimProfileModalLabel" data-i18n="claim.title">Claim This Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info" role="alert">
+          <i class="bi bi-info-circle"></i>
+          <span data-i18n="claim.info">You are about to claim this profile. Please provide documentation proving you are
+            the owner or authorized representative of this business.</span>
+        </div>
+
+        <form id="claim-profile-form">
+          <div class="mb-3">
+            <label for="claim-documents" class="form-label" data-i18n="claim.uploadDocuments">Upload Proof of
+              Ownership</label>
+            <input type="file" class="form-control" id="claim-documents" multiple accept="image/*,.pdf" required>
+            <small class="form-text text-muted" data-i18n="claim.documentsHint">Upload official documents (business
+              license, registration, ID, etc.). Max 5MB per file.</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" data-i18n="claim.requirements">Required Documents:</label>
+            <ul class="small">
+              <li data-i18n="claim.req1">Business license or medical license</li>
+              <li data-i18n="claim.req2">Proof of ownership or authorization</li>
+              <li data-i18n="claim.req3">Government-issued ID</li>
+            </ul>
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="claim-agreement" required>
+            <label class="form-check-label" for="claim-agreement">
+              <small data-i18n="claim.agreement">I confirm that I am the owner or authorized representative of this
+                business and that the information I provide is accurate.</small>
+            </label>
+          </div>
+
+          <div id="claim-error" class="alert alert-danger d-none" role="alert"></div>
+          <div id="claim-success" class="alert alert-success d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          data-i18n="common.cancel">Cancel</button>
+        <button type="button" class="btn btn-warning" id="submit-claim-btn" data-i18n="claim.submit">Submit
+          Claim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Profile page functionality
+  let currentProvider = null;
+  let providerMap = null;
+
+  // Initialize profile page
+  async function initProfilePage() {
+    try {
+      // Get provider ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const providerId = urlParams.get('id');
+
+      if (!providerId) {
+        throw new Error('Provider ID not specified');
+      }
+
+      // Show loading state
+      document.getElementById('profile-loading').classList.remove('d-none');
+      document.getElementById('profile-content').classList.add('d-none');
+      document.getElementById('profile-error').classList.add('d-none');
+
+      // Fetch provider profile
+      currentProvider = await profileModule.getProviderProfile(providerId);
+
+      // Render profile
+      renderProfile(currentProvider);
+
+      // Initialize map
+      initMap(currentProvider.location);
+
+      // Check favorite status
+      updateFavoriteButton();
+
+      // Show content
+      document.getElementById('profile-loading').classList.add('d-none');
+      document.getElementById('profile-content').classList.remove('d-none');
+
+    } catch (error) {
+      console.error('Error initializing profile page:', error);
+      showError(error.message);
+    }
+  }
+
+  // Render provider profile
+  function renderProfile(provider) {
+    // Header
+    document.getElementById('provider-name').textContent = provider.name;
+    document.getElementById('provider-type').textContent = provider.type;
+
+    if (provider.specialty) {
+      document.getElementById('provider-specialty').textContent = provider.specialty;
+    }
+
+    if (provider.description) {
+      document.getElementById('provider-description').textContent = provider.description;
+    }
+
+    // Badges
+    if (provider.verified) {
+      document.getElementById('verified-badge').classList.remove('d-none');
+    }
+    if (provider.accessibility) {
+      document.getElementById('accessibility-badge').classList.remove('d-none');
+    }
+    if (provider.homeVisits) {
+      document.getElementById('home-visit-badge').classList.remove('d-none');
+    }
+    if (provider.available24_7) {
+      document.getElementById('emergency-badge').classList.remove('d-none');
+    }
+
+    // Show claim button if profile is claimable
+    if (provider.preloaded && !provider.claimed) {
+      document.getElementById('claim-profile-btn').classList.remove('d-none');
+    }
+
+    // Rating
+    if (provider.rating) {
+      renderRating(provider.rating);
+    }
+
+    // Contact Information
+    if (provider.phone) {
+      const phoneLink = document.getElementById('provider-phone');
+      phoneLink.textContent = Utils.formatPhone(provider.phone);
+      phoneLink.href = `tel:${provider.phone}`;
+    }
+
+    if (provider.email) {
+      document.getElementById('email-section').classList.remove('d-none');
+      const emailLink = document.getElementById('provider-email');
+      emailLink.textContent = provider.email;
+      emailLink.href = `mailto:${provider.email}`;
+    }
+
+    if (provider.address) {
+      const addressText = `${provider.address.street || ''}, ${provider.address.city || ''}, ${provider.address.state || ''}`.trim();
+      document.getElementById('provider-address').textContent = addressText;
+    }
+
+    // Operating Hours
+    renderOperatingHours(provider.hours);
+
+    // Photo Gallery
+    if (provider.images && provider.images.length > 0) {
+      renderPhotoGallery(provider.images);
+    }
+
+    // Services
+    if (provider.services && provider.services.length > 0) {
+      renderServices(provider.services);
+    }
+  }
+
+  // Render rating stars
+  function renderRating(rating) {
+    const ratingContainer = document.getElementById('provider-rating');
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    let starsHTML = '<span class="text-warning">';
+
+    for (let i = 0; i < fullStars; i++) {
+      starsHTML += '<i class="bi bi-star-fill"></i>';
+    }
+
+    if (hasHalfStar) {
+      starsHTML += '<i class="bi bi-star-half"></i>';
+    }
+
+    for (let i = 0; i < emptyStars; i++) {
+      starsHTML += '<i class="bi bi-star"></i>';
+    }
+
+    starsHTML += '</span>';
+    starsHTML += `<span class="ms-2" id="rating-value">${rating.toFixed(1)}</span>`;
+
+    ratingContainer.innerHTML = starsHTML;
+  }
+
+  // Render operating hours
+  function renderOperatingHours(hours) {
+    const hoursContainer = document.getElementById('operating-hours');
+
+    if (!hours || Object.keys(hours).length === 0) {
+      hoursContainer.innerHTML = '<p class="text-muted mb-0">Hours not available</p>';
+      return;
+    }
+
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const dayNames = {
+      monday: 'Monday',
+      tuesday: 'Tuesday',
+      wednesday: 'Wednesday',
+      thursday: 'Thursday',
+      friday: 'Friday',
+      saturday: 'Saturday',
+      sunday: 'Sunday'
+    };
+
+    let hoursHTML = '<div class="list-group list-group-flush">';
+
+    days.forEach(day => {
+      const dayHours = hours[day];
+      hoursHTML += `
+      <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+        <span class="fw-medium">${dayNames[day]}</span>
+        <span class="text-muted">
+          ${dayHours && dayHours.open && dayHours.close
+          ? `${dayHours.open} - ${dayHours.close}`
+          : 'Closed'}
+        </span>
+      </div>
+    `;
+    });
+
+    hoursHTML += '</div>';
+    hoursContainer.innerHTML = hoursHTML;
+  }
+
+  // Render photo gallery
+  function renderPhotoGallery(images) {
+    const gallerySection = document.getElementById('photo-gallery-section');
+    const gallery = document.getElementById('photo-gallery');
+
+    gallerySection.classList.remove('d-none');
+
+    let galleryHTML = '';
+    images.forEach((imageUrl, index) => {
+      galleryHTML += `
+      <div class="col-6 col-md-4">
+        <div class="ratio ratio-1x1">
+          <img src="${imageUrl}" 
+               alt="Provider photo ${index + 1}" 
+               class="img-thumbnail object-fit-cover cursor-pointer"
+               onclick="openPhotoModal('${imageUrl}')"
+               style="cursor: pointer;">
+        </div>
+      </div>
+    `;
+    });
+
+    gallery.innerHTML = galleryHTML;
+  }
+
+  // Render services
+  function renderServices(services) {
+    const servicesSection = document.getElementById('services-section');
+    const servicesList = document.getElementById('services-list');
+
+    servicesSection.classList.remove('d-none');
+
+    let servicesHTML = '';
+    services.forEach(service => {
+      servicesHTML += `
+      <li class="mb-2">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        ${service}
+      </li>
+    `;
+    });
+
+    servicesList.innerHTML = servicesHTML;
+  }
+
+  // Initialize map
+  function initMap(location) {
+    if (!location || !location.lat || !location.lng) {
+      document.getElementById('provider-map').innerHTML =
+        '<p class="text-muted text-center py-5">Location not available</p>';
+      return;
+    }
+
+    // Initialize Leaflet map
+    providerMap = L.map('provider-map').setView([location.lat, location.lng], 15);
+
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(providerMap);
+
+    // Add marker
+    L.marker([location.lat, location.lng])
+      .addTo(providerMap)
+      .bindPopup(currentProvider.name)
+      .openPopup();
+  }
+
+  // Open photo modal
+  function openPhotoModal(imageUrl) {
+    const modal = new bootstrap.Modal(document.getElementById('photoModal'));
+    document.getElementById('modal-photo').src = imageUrl;
+    modal.show();
+  }
+
+  // Handle favorite click
+  async function handleFavoriteClick() {
+    try {
+      const currentUser = await authModule.getCurrentUser();
+
+      if (!currentUser) {
+        // Redirect to login
+        if (confirm('You must be signed in to favorite providers. Sign in now?')) {
+          window.location.href = '/pages/auth.html?redirect=' + encodeURIComponent(window.location.href);
+        }
+        return;
+      }
+
+      const btn = document.getElementById('favorite-btn');
+      btn.disabled = true;
+
+      const isFavorited = await profileModule.toggleFavorite(currentProvider.id);
+
+      updateFavoriteButton(isFavorited);
+
+      btn.disabled = false;
+
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      alert('Failed to update favorites. Please try again.');
+    }
+  }
+
+  // Update favorite button state
+  async function updateFavoriteButton(isFavorited = null) {
+    const btn = document.getElementById('favorite-btn');
+
+    if (isFavorited === null) {
+      isFavorited = await profileModule.isFavorited(currentProvider.id);
+    }
+
+    if (isFavorited) {
+      btn.innerHTML = '<i class="bi bi-heart-fill"></i> <span data-i18n="profile.removeFavorite">Remove from Favorites</span>';
+      btn.classList.remove('btn-outline-danger');
+      btn.classList.add('btn-danger');
+    } else {
+      btn.innerHTML = '<i class="bi bi-heart"></i> <span data-i18n="profile.addFavorite">Add to Favorites</span>';
+      btn.classList.remove('btn-danger');
+      btn.classList.add('btn-outline-danger');
+    }
+  }
+
+  // Handle share click
+  async function handleShareClick() {
+    const shareData = {
+      title: currentProvider.name,
+      text: `Check out ${currentProvider.name} on CityHealth`,
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy to clipboard
+        await Utils.copyToClipboard(window.location.href);
+        alert('Link copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
+  }
+
+  // Copy phone number
+  async function copyPhone() {
+    try {
+      await Utils.copyToClipboard(currentProvider.phone);
+      alert('Phone number copied to clipboard!');
+    } catch (error) {
+      console.error('Error copying phone:', error);
+    }
+  }
+
+  // Get directions
+  function getDirections() {
+    if (!currentProvider.location) return;
+
+    const { lat, lng } = currentProvider.location;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, '_blank');
+  }
+
+  // Show error
+  function showError(message) {
+    document.getElementById('profile-loading').classList.add('d-none');
+    document.getElementById('profile-content').classList.add('d-none');
+    document.getElementById('profile-error').classList.remove('d-none');
+    document.getElementById('profile-error-message').textContent = message;
+  }
+
+  // Handle claim profile click
+  async function handleClaimClick() {
+    try {
+      const currentUser = await authModule.getCurrentUser();
+
+      if (!currentUser) {
+        // Redirect to login
+        if (confirm('You must be signed in as a provider to claim profiles. Sign in now?')) {
+          window.location.href = '/pages/auth.html?redirect=' + encodeURIComponent(window.location.href);
+        }
+        return;
+      }
+
+      if (currentUser.role !== 'provider') {
+        alert('Only provider accounts can claim profiles. Please sign in with a provider account.');
+        return;
+      }
+
+      // Show claim modal
+      const modal = new bootstrap.Modal(document.getElementById('claimProfileModal'));
+      modal.show();
+
+    } catch (error) {
+      console.error('Error handling claim click:', error);
+      alert('An error occurred. Please try again.');
+    }
+  }
+
+  // Submit claim request
+  document.addEventListener('DOMContentLoaded', function () {
+    const submitClaimBtn = document.getElementById('submit-claim-btn');
+
+    if (submitClaimBtn) {
+      submitClaimBtn.addEventListener('click', async function () {
+        const documentsInput = document.getElementById('claim-documents');
+        const agreementCheckbox = document.getElementById('claim-agreement');
+        const errorDiv = document.getElementById('claim-error');
+        const successDiv = document.getElementById('claim-success');
+        const submitBtn = this;
+
+        // Hide previous messages
+        errorDiv.classList.add('d-none');
+        successDiv.classList.add('d-none');
+
+        // Validate
+        if (!documentsInput.files || documentsInput.files.length === 0) {
+          errorDiv.textContent = 'Please upload at least one document';
+          errorDiv.classList.remove('d-none');
+          return;
+        }
+
+        if (!agreementCheckbox.checked) {
+          errorDiv.textContent = 'Please confirm the agreement';
+          errorDiv.classList.remove('d-none');
+          return;
+        }
+
+        try {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+          // Convert FileList to Array
+          const documents = Array.from(documentsInput.files);
+
+          // Submit claim request
+          await adminModule.claimProfile(currentProvider.id, documents);
+
+          successDiv.textContent = 'Claim request submitted successfully! You will be notified once it is reviewed.';
+          successDiv.classList.remove('d-none');
+
+          // Hide claim button and reload after 2 seconds
+          setTimeout(() => {
+            bootstrap.Modal.getInstance(document.getElementById('claimProfileModal')).hide();
+            document.getElementById('claim-profile-btn').classList.add('d-none');
+
+            // Show info message
+            const infoAlert = document.createElement('div');
+            infoAlert.className = 'alert alert-info alert-dismissible fade show';
+            infoAlert.innerHTML = `
+            <i class="bi bi-info-circle"></i>
+            <span>Your claim request has been submitted and is pending admin review.</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          `;
+            document.querySelector('.container').insertBefore(infoAlert, document.querySelector('.container').firstChild);
+          }, 2000);
+
+        } catch (error) {
+          console.error('Error submitting claim request:', error);
+          errorDiv.textContent = error.message || 'Failed to submit claim request';
+          errorDiv.classList.remove('d-none');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Claim';
+        }
+      });
+    }
+  });
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProfilePage);
+  } else {
+    initProfilePage();
+  }
+</script>

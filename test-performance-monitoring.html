@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Monitoring Test - CityHealth</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0d6efd;
+        }
+        .metric-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .metric-value {
+            font-size: 1.2em;
+            color: #0d6efd;
+        }
+        .success {
+            color: #198754;
+        }
+        .warning {
+            color: #ffc107;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .log-output {
+            background: #212529;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">🔍 Performance Monitoring Test</h1>
+        
+        <div class="alert alert-info">
+            <strong>Test Purpose:</strong> Verify Firebase Performance Monitoring integration and custom metrics tracking
+        </div>
+
+        <!-- Initialization Status -->
+        <div class="test-section">
+            <h3>1. Initialization Status</h3>
+            <div id="init-status">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="ms-2">Checking initialization...</span>
+            </div>
+        </div>
+
+        <!-- Page Load Metrics -->
+        <div class="test-section">
+            <h3>2. Page Load Metrics</h3>
+            <div id="page-metrics">
+                <p class="text-muted">Loading metrics...</p>
+            </div>
+        </div>
+
+        <!-- Custom Trace Test -->
+        <div class="test-section">
+            <h3>3. Custom Trace Test</h3>
+            <button id="test-trace-btn" class="btn btn-primary">Start Custom Trace</button>
+            <div id="trace-result" class="mt-3"></div>
+        </div>
+
+        <!-- Firestore Query Simulation -->
+        <div class="test-section">
+            <h3>4. Firestore Query Performance</h3>
+            <button id="test-firestore-btn" class="btn btn-primary">Simulate Firestore Query</button>
+            <div id="firestore-result" class="mt-3"></div>
+        </div>
+
+        <!-- API Call Simulation -->
+        <div class="test-section">
+            <h3>5. API Call Performance</h3>
+            <button id="test-api-btn" class="btn btn-primary">Simulate API Call</button>
+            <div id="api-result" class="mt-3"></div>
+        </div>
+
+        <!-- Search Performance -->
+        <div class="test-section">
+            <h3>6. Search Performance</h3>
+            <button id="test-search-btn" class="btn btn-primary">Simulate Search</button>
+            <div id="search-result" class="mt-3"></div>
+        </div>
+
+        <!-- Component Render Test -->
+        <div class="test-section">
+            <h3>7. Component Render Performance</h3>
+            <button id="test-render-btn" class="btn btn-primary">Test Component Render</button>
+            <div id="render-result" class="mt-3"></div>
+        </div>
+
+        <!-- Performance Summary -->
+        <div class="test-section">
+            <h3>8. Performance Summary</h3>
+            <button id="get-summary-btn" class="btn btn-success">Get Performance Summary</button>
+            <div id="summary-result" class="mt-3"></div>
+        </div>
+
+        <!-- Console Log Output -->
+        <div class="test-section">
+            <h3>9. Console Output</h3>
+            <div id="console-output" class="log-output"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-performance-compat.js"></script>
+
+    <!-- Performance Monitoring Module -->
+    <script src="assets/js/performance-monitoring.js"></script>
+
+    <!-- Test Script -->
+    <script>
+        // Capture console logs
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+
+        function addToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#ffd93d' : '#00ff00';
+            consoleOutput.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsole(args.join(' '), 'warn');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        // Test functions
+        function checkInitialization() {
+            const statusDiv = document.getElementById('init-status');
+            
+            if (typeof window.PerformanceMonitoring === 'undefined') {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>❌ Failed:</strong> PerformanceMonitoring module not loaded
+                    </div>
+                `;
+                return false;
+            }
+
+            if (!window.PerformanceMonitoring.perf) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Warning:</strong> Firebase Performance not initialized (Firebase config may be missing)
+                    </div>
+                `;
+                return false;
+            }
+
+            statusDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> Performance Monitoring initialized successfully
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Module Status:</div>
+                    <div class="metric-value success">Active</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Firebase Performance:</div>
+                    <div class="metric-value success">Connected</div>
+                </div>
+            `;
+            return true;
+        }
+
+        function displayPageMetrics() {
+            const metricsDiv = document.getElementById('page-metrics');
+            const metrics = window.PerformanceMonitoring.getPerformanceMetrics();
+
+            if (!metrics) {
+                metricsDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        Performance metrics not available yet. Refresh the page to see metrics.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="row">';
+            
+            Object.entries(metrics).forEach(([key, value]) => {
+                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                const valueClass = value > 3000 ? 'error' : value > 1000 ? 'warning' : 'success';
+                
+                html += `
+                    <div class="col-md-6">
+                        <div class="metric-card">
+                            <div class="metric-label">${label}:</div>
+                            <div class="metric-value ${valueClass}">${value}ms</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            metricsDiv.innerHTML = html;
+        }
+
+        // Test custom trace
+        document.getElementById('test-trace-btn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('trace-result');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Running trace...';
+
+            const traceName = 'test_custom_trace';
+            const trace = window.PerformanceMonitoring.startTrace(traceName);
+
+            // Simulate some work
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Add metrics
+            window.PerformanceMonitoring.addTraceMetric(traceName, 'test_metric', 42);
+            window.PerformanceMonitoring.addTraceAttribute(traceName, 'test_type', 'manual');
+
+            window.PerformanceMonitoring.stopTrace(traceName);
+
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> Custom trace completed
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Trace Name:</div>
+                    <div class="metric-value">${traceName}</div>
+                </div>
+            `;
+        });
+
+        // Test Firestore query tracking
+        document.getElementById('test-firestore-btn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('firestore-result');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Simulating query...';
+
+            const stopTracking = window.PerformanceMonitoring.trackFirestoreQuery('providers', 'read');
+
+            // Simulate query delay
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            stopTracking();
+
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> Firestore query tracked
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Collection:</div>
+                    <div class="metric-value">providers</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Operation:</div>
+                    <div class="metric-value">read</div>
+                </div>
+            `;
+        });
+
+        // Test API call tracking
+        document.getElementById('test-api-btn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Simulating API call...';
+
+            const stopTracking = window.PerformanceMonitoring.trackAPICall('/api/test', 'GET');
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 400));
+
+            stopTracking(true);
+
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> API call tracked
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Endpoint:</div>
+                    <div class="metric-value">/api/test</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Method:</div>
+                    <div class="metric-value">GET</div>
+                </div>
+            `;
+        });
+
+        // Test search tracking
+        document.getElementById('test-search-btn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('search-result');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Simulating search...';
+
+            const stopTracking = window.PerformanceMonitoring.trackSearch({ query: 'test' });
+
+            // Simulate search delay
+            await new Promise(resolve => setTimeout(resolve, 250));
+
+            stopTracking(15);
+
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> Search tracked
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Results:</div>
+                    <div class="metric-value">15 providers</div>
+                </div>
+            `;
+        });
+
+        // Test component render tracking
+        document.getElementById('test-render-btn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('render-result');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Simulating render...';
+
+            const stopTracking = window.PerformanceMonitoring.trackComponentRender('test-component');
+
+            // Simulate render delay
+            await new Promise(resolve => setTimeout(resolve, 150));
+
+            stopTracking();
+
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>✅ Success:</strong> Component render tracked
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Component:</div>
+                    <div class="metric-value">test-component</div>
+                </div>
+            `;
+        });
+
+        // Get performance summary
+        document.getElementById('get-summary-btn').addEventListener('click', () => {
+            const resultDiv = document.getElementById('summary-result');
+            
+            console.log('=== Performance Summary ===');
+            window.PerformanceMonitoring.logPerformanceMetrics();
+            
+            resultDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <strong>ℹ️ Info:</strong> Performance summary logged to console (see Console Output section below)
+                </div>
+            `;
+        });
+
+        // Initialize tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkInitialization();
+                displayPageMetrics();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
